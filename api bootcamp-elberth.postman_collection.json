@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "78a36f99-e93b-4b12-b33b-d34507eeb488",
+		"name": "api bootcamp-elberth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "post",
+			"item": [
+				{
+					"name": "edit post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"b5bdba05-61ad-4629-b4be-bd866684a8be\",\r\n    \"nome\":\"teste de edição\",\r\n    \"teste\":\"fsdfdsfsdfsf\",\r\n    \"parametroteste\":\"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/post",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/v1/post/611f9b7f-a505-4724-8de1-e148ae998a44",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post",
+								"611f9b7f-a505-4724-8de1-e148ae998a44"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"teste de edição\",\r\n    \"parametroteste\":\"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/post",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9\",\r\n    \"nome\":\"teste de edição\",\r\n    \"categoria\":\"Viagens\",\r\n    \"camponovo\":\"novooo\",\r\n    \"parametroteste\":\"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/post/b5bdba05-61ad-4629-b4be-bd866684a8be",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post",
+								"b5bdba05-61ad-4629-b4be-bd866684a8be"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/v1/post",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "custom post finder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/v1/post/find/categoria/f6f2ddc5-bbbe-4926-9ec4-aa674a380b0e",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"post",
+								"find",
+								"categoria",
+								"f6f2ddc5-bbbe-4926-9ec4-aa674a380b0e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categoria",
+			"item": [
+				{
+					"name": "get categoria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/v1/categoria/5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"categoria",
+								"5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post categoria",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\":\"Viagens\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/categoria",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"categoria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit categoria",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9\",\r\n    \"nome\":\"teste de edição\",\r\n    \"categoria\":\"Viagens\",\r\n    \"camponovo\":\"novooo\",\r\n    \"parametroteste\":\"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/categoria",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"categoria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete categoria",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9\",\r\n    \"nome\":\"teste de edição\",\r\n    \"categoria\":\"Viagens\",\r\n    \"camponovo\":\"novooo\",\r\n    \"parametroteste\":\"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/v1/categoria/5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"categoria",
+								"5e1fd0ab-0dae-4bc8-89b3-603b6fe930b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/v1/categoria",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v1",
+								"categoria"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

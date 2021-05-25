@@ -1,0 +1,23 @@
+{
+  "name": "api-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "drop-categoria": "node file-cli.js drop categoria",
+    "drop-post": "node file-cli.js drop post",
+    "about": "node file-cli.js about",
+    "execute": "node file-cli.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "uuid": "^8.3.2"
+  }
+}
