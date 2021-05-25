@@ -7,20 +7,23 @@ function tagsHandler(database) {
     return async (req, res, next) =>{
         let relationsDatabase = await databaseConfig.openFile('config')
         console.log('start')
-        relationsDatabase.map((config)=>{
+        await Promise.all(relationsDatabase.map(async (config)=>{
             if(!config['relation']){
-return
+                return
             }
-
-if(config['relation'].map((relation)=>{
-if(relation['table'])
-}) 
             
-          
-        })
+             await Promise.all(config['relation'].map(async (relation)=>{
+                if(relation['table'] == database){
+                    console.log(`banco ${database} possui alguma relação com ${config.database}`)
+                   await databaseConfig.relationCreator(req.body,database,config.database,relation['key'])
+                }
+            })) 
+            
+            
+        }))
         console.log('end')
         let customDatabase = await databaseConfig.openCustomDatabase(database)
-        console.log('custom db',customDatabase)
+        //console.log('custom db',customDatabase)
         let arrayRelationTag = []
         let toRemove = []
         const { body } = req;

@@ -2,6 +2,8 @@ const fs = require('fs');
 const uuid = require('uuid').v4;
 const path = require('path');
 const root_dir  = path.join(path.dirname(require.main.filename),'api','config')
+const databaseHandler = require('./database.utils')
+const tagUtils = require('./tags.utils')
 
 const openFile = async (arquivo) =>{
     let filePath = path.join(root_dir,arquivo+'.json')
@@ -9,8 +11,8 @@ const openFile = async (arquivo) =>{
         
         const json =  fs.readFileSync(filePath);
         if(Object.keys(json).length == 0){
-        console.log('não foi possivel abrir. Erro critico no banco',arquivo)
-        await saveFile(arquivo,[])
+            console.log('não foi possivel abrir. Erro critico no banco',arquivo)
+            await saveFile(arquivo,[])
         }
         return JSON.parse(json)
     }else{
@@ -25,12 +27,12 @@ const openCustomDatabase = async (database) =>{
         
         const json =  fs.readFileSync(filePath);
         if(Object.keys(json).length == 0){
-        console.log('não foi possivel abrir. Erro critico no banco',arquivo)
-        await saveFile(arquivo,[])
+            console.log('não foi possivel abrir. Erro critico no banco',arquivo)
+            await saveFile(arquivo,[])
         }
-
+        
         let finder = JSON.parse(json).find((item)=>item.database === database)
-
+        
         return finder
     }else{
         await saveFile(arquivo,[])
@@ -54,7 +56,7 @@ const updateOverwrite = async (arquivo,model) =>{
     let json = await openFile(arquivo)
     let copyJson = [...json]
     var editTeste = copyJson.findIndex((item)=>item.id == model.id)
-   // delete model['id']
+    // delete model['id']
     json[editTeste] = {...model}
     await saveFile(arquivo,json)
 }
@@ -81,14 +83,47 @@ const saveFile = async (arquivo,model) =>{
     }
 }
 
+
+const relationCreator = async (body,database,relationDatabase,key) =>{
+    const config = await openFile('config')
+    const databaseConfig = config.find((dat)=>dat.database == database)
+    const relationalConfig = config.find((dat)=>dat.database == relationDatabase)
+    const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
+    
+ return await Promise.all(relationDatabaseJson.map(async (data)=>{
+        if(Array.isArray(data[key])){
+          await Promise.all(data[key].map(async (f)=>{
+                if(f == body.id){
+                    var id = data.id
+                await tagUtils.tagsSync(database,relationDatabase,key,id)
+                   // return i.id
+                }
+            }))
+        }
+    }))
+    
+    if(!relation){
+        console.log('#####cant find this' + database + 'associete to this '+ relation)
+        return
+    }
+    console.log('found relation with',relation)
+    console.log('config for database',databaseConfig)
+    console.log('config for relation database',relationalConfig)
+    console.log('relation creator called')
+    console.log(body)
+    console.log(database)
+    console.log(relationDatabase)
+}
+
 const createDatabase = async () =>{
-
-
+    
+    
 }
 module.exports = {
     openFile,
     saveFile,
     Delete,
+    relationCreator,
     Insert,
     updateOverwrite,
     openCustomDatabase,

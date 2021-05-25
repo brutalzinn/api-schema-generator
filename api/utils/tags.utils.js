@@ -1,7 +1,6 @@
 const {tagsGenerator} = require('./tags.generator')
 const {openFile,createModel,Insert,Update,Delete,updateOverwrite} = require('../utils/database.utils')
 const tagEnabled =  Boolean(parseInt(process.env.TAGS))
-const databaseConfig = require('../utils/database.assist.utils')
 
 const isEnabled = () =>{
     return tagEnabled
@@ -42,10 +41,12 @@ const tagsUpdate = async (arquivo,model) =>{
     return database[tagsFinder]['tags']
 }
 const tagsSync = async (origin,destin,key,id) =>{
-    if(!isEnabled()){
-        return
-    }
-    
+    // if(!isEnabled()){
+    //     return
+    // }
+    const databaseConfig = require('../utils/database.assist.utils')
+
+    console.log('#######tags sycn',isEnabled())
     const databaseOrigin = await openFile(origin) //categoria
     const databaseDestin = await openFile(destin) //post
     let originConfig = await databaseConfig.openCustomDatabase(origin)
@@ -55,6 +56,7 @@ const tagsSync = async (origin,destin,key,id) =>{
     
     let existedTags = []
     let father = databaseDestin.find((d)=> d.id == id)
+    console.log('father',father)
     if(!father){
         return
     }
@@ -89,7 +91,7 @@ const tagsSync = async (origin,destin,key,id) =>{
     let fatherIndex = databaseDestin.findIndex((d)=> d.id == id)
     databaseDestin[fatherIndex]['tags'] = [...unique]
     await updateOverwrite(destin,databaseDestin[fatherIndex])
-    return unique
+  //  return unique
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']
 }
