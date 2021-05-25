@@ -19,6 +19,25 @@ const openFile = async (arquivo) =>{
         return JSON.parse(json)
     }
 }
+const openCustomDatabase = async (database) =>{
+    let filePath = path.join(root_dir,'config.json')
+    if (fs.existsSync(filePath)) {
+        
+        const json =  fs.readFileSync(filePath);
+        if(Object.keys(json).length == 0){
+        console.log('não foi possivel abrir. Erro critico no banco',arquivo)
+        await saveFile(arquivo,[])
+        }
+
+        let finder = JSON.parse(json).find((item)=>item.database === database)
+
+        return finder
+    }else{
+        await saveFile(arquivo,[])
+        const json =  fs.readFileSync(filePath);
+        return JSON.parse(json)
+    }
+}
 const createModel = (model) =>{
     return {id:uuid(),...model}
 }
@@ -72,6 +91,7 @@ module.exports = {
     Delete,
     Insert,
     updateOverwrite,
+    openCustomDatabase,
     Update,
     createModel
 }

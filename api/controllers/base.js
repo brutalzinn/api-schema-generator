@@ -7,7 +7,7 @@ function createPost(database){
 return async (req,res,next) => {
     const { body } = req;
 console.log('creating dybamic post..',database)
-   // await create(body)
+   await create(database,body)
 
     return res.status(200).send({
       mensagem: "Post registrado com sucesso."

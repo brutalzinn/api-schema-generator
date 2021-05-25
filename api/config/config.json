@@ -1,1 +1,1 @@
-[{"database":"categoria","tag":["treta"]},{"database":"post","relation":[{"table":"categoria","key":"abacate"},{"table":"categoria","key":"abacate"}],"tag":["teste","abacate","leite","farinha"]}]
+[{"database":"post","tag":["titulo"],"relation":[{"table":"categoria","key":"categoria"}]},{"database":"categoria","tag":["nome"]}]

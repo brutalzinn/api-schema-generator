@@ -1,10 +1,8 @@
 function isArray(obj){
     return !!obj && obj.constructor === Array;
 }
-const tagsGenerator =  (model) =>{
+const tagsGenerator =  (model,toTags) =>{
     const regex = /[\s,\.;:\(\)\-']/
-    let toTags = process.env.TAGS_ATTRIBUTES.split(' ');
-
     let tags = []
     toTags.map((item)=>{
         if(model[item]){

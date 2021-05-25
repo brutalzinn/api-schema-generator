@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const databaseSave = require('./api/utils/database.utils')
+
 const {saveFile,openFile} = require('./api/utils/database.assist.utils')
 const root_dir  = path.join(path.dirname(require.main.filename),'api')
 var myArgs = process.argv.slice(2);
@@ -16,6 +18,7 @@ switch(myArgs[0]){
     let databases = await openFile('config')
     databases.push({database})
     await saveFile('config',databases)
+    await databaseSave.openFile(database)
     console.log(`database ${database} are sucefull created`)
   }
   createDatabase(myArgs[1])
@@ -27,18 +30,23 @@ switch(myArgs[0]){
     let finder = databases.findIndex((item)=>item.database === myArgs[1])
     var myTags = []
     var alreadyTag = false
+    let existedTags = []
     for(var i = 2;i < myArgs.length; i++){
       myTags.push(myArgs[i])
     }
-    
+    if(databases[finder]['tag']){
+      existedTags = databases[finder]['tag']
+    }else{
+      existedTags = []
+    }
     console.log('tags',myTags)
-    var allTags = databases[finder]['tag'].concat(myTags)
-
+    var allTags = existedTags.concat(myTags)
+    
     let unique = [...new Set(allTags)];
-
-      
+    
+    
     // }else{
-     databases[finder] = {...databases[finder],tag:unique}
+    databases[finder] = {...databases[finder],tag:unique}
     // }
     await saveFile('config',databases)
     console.log(`database ${database} are sucefull created`)
