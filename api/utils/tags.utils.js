@@ -1,6 +1,7 @@
 const {tagsGenerator} = require('./tags.generator')
 const {openFile,createModel,Insert,Update,Delete,updateOverwrite} = require('../utils/database.utils')
 const tagEnabled =  Boolean(parseInt(process.env.TAGS))
+const databaseConfig = require('../utils/database.assist.utils')
 
 const isEnabled = () =>{
     return tagEnabled
@@ -14,11 +15,11 @@ const tagsUtil = (model) =>{
     const tags = model['tags']
     return {...modelCopy,...tags}
 }
-const tagsCreator = (model) =>{
+const tagsCreator = (model,tags) =>{
     if(!isEnabled()){
         return
     }
-    return tagsGenerator(model)
+    return tagsGenerator(model,tags)
 }
 function isArray(obj){
     
@@ -40,68 +41,35 @@ const tagsUpdate = async (arquivo,model) =>{
     }
     return database[tagsFinder]['tags']
 }
-const tagsSync = async (origin,destin,key) =>{
+const tagsSync = async (origin,destin,key,id) =>{
     if(!isEnabled()){
         return
     }
+    
     const databaseOrigin = await openFile(origin) //categoria
     const databaseDestin = await openFile(destin) //post
+    let originConfig = await databaseConfig.openCustomDatabase(origin)
+    let destinConfig = await databaseConfig.openCustomDatabase(destin)
+    let originTag = originConfig['tag']
+    let destinTag = destinConfig['tag']
     
-    databaseDestin.map((origin,index)=>{
-        let originTags = []
-        if(isArray(origin[key])){
-            origin[key].map((category,keyIndex)=>{
-                let categoryFinder = databaseOrigin.find((v)=> v.id == category)
-                if(!categoryFinder){
-                    if(Object.keys(origin[key]).length == 1){
-                        console.log('executou')
-                        delete databaseDestin[index][key]
-                        console.log('toremove',databaseDestin[index])
-                    }else{
-                        origin[key].splice(keyIndex,1)
-                    }
-                    //   return false
-                }else{
-                    tagsCreator(categoryFinder).map((catTag)=>{
-                        if(!originTags.includes(catTag)){
-                            originTags.push(catTag)
-                        }
-                    })
-                }
-                
-            })
-        }else{
-            let categoryFinder = databaseOrigin.find((v)=> v.id == origin[key])
-            console.log('FSDFFSDSDF',categoryFinder)
-            if(!categoryFinder){
-                console.log('sem indetificao',origin[key])
-                console.log('categoria sem array não encontrada')
-                delete databaseDestin[index][key]
-            }else{
-                tagsCreator(categoryFinder).map((catTag)=>{
-                    if(!originTags.includes(catTag)){
-                        originTags.push(catTag)
-                    }
-                })
-            }
+    let allTags = []
+    databaseDestin.map((destin)=>{
+        let result = databaseOrigin.find((f)=>f.id == destin[key])
+        if(!result){
+            return
         }
-        
-        const update = async () =>{ 
-            
-            tagsCreator(origin).map((item)=>{
-                if(!originTags.includes(item)){
-                    originTags.push(item)
-                }
-            })
-            // if(Object.values(origin[key]).length == 0){
-            // }
-            databaseDestin[index]['tags'] = [...originTags]
-            await updateOverwrite(destin,databaseDestin[index])
-        }
-        update()
-    }) 
+       allTags.push(tagsGenerator(result,originTag))
+    })
+ 
+    //tagsGenerator( )
     
-    return databaseDestin
+    //databaseDestin[index]['tags'] = [...originTags]
+    // await updateOverwrite(destin,databaseDestin[index])
+    
+    
+    
+    // return databaseDestin
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']
 }

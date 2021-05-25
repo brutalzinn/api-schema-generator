@@ -16,7 +16,7 @@ function createPost(database){
 function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
-    await del(id)
+    await del(database,id)
     return res.status(200).send({
       mensagem: "Post deletado com sucesso."
     });
@@ -28,7 +28,7 @@ function delPost(database){
 function getPost(database){ 
   return async (req,res,next) => {
     const {id} = req.params
-    const response = await get(id)
+    const response = await get(database,id)
     
     return res.status(200).json(response)
   }
@@ -36,7 +36,7 @@ function getPost(database){
 function lista(database){
   
   return async (req,res,next) => {
-    const response = await list()
+    const response = await list(database)
     
     return res.status(200).json(response)
   }
@@ -45,8 +45,7 @@ function lista(database){
 function editPost(database){
   return async (req,res,next) => {
     const { body } = req;
-    
-    await edit(body)
+    await edit(database,body)
     return res.status(200).send({
       mensagem: "Post alterado com sucesso."
     });

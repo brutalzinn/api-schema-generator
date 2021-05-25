@@ -18,7 +18,7 @@ return databases.map((data)=>{
   )
   router.route(`/${data.database}/:id`)
   .delete(
-  baseController.delPost
+  baseController.delPost(data.database)
   )
   router.route(`/${data.database}/:id`)
   .get(
