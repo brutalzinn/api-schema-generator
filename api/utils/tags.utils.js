@@ -53,23 +53,43 @@ const tagsSync = async (origin,destin,key,id) =>{
     let originTag = originConfig['tag']
     let destinTag = destinConfig['tag']
     
-    let allTags = []
-    databaseDestin.map((destin)=>{
-        let result = databaseOrigin.find((f)=>f.id == destin[key])
+    let existedTags = []
+    let father = databaseDestin.find((d)=> d.id == id)
+    if(!father){
+        return
+    }
+    if(Array.isArray(father[key])){
+        father[key].map((c)=>{
+            let result = databaseOrigin.find((f)=>f.id == c)
+            if(!result){
+                let indexCategory = father[key].findIndex((i)=>i == c)
+                father[key].splice(indexCategory,1)
+                return
+            }
+            tagsGenerator(result,originTag).map((t)=>{
+                existedTags.push(t)
+            })
+        })
+    }else{
+        let result = databaseOrigin.find((f)=>f.id == father[key])
         if(!result){
             return
         }
-       allTags.push(tagsGenerator(result,originTag))
+        tagsGenerator(result,originTag).map((t)=>{
+            existedTags.push(t)
+        })
+    }
+    
+    
+    
+    tagsGenerator(father,destinTag).map((t)=>{
+        existedTags.push(t)
     })
- 
-    //tagsGenerator( )
-    
-    //databaseDestin[index]['tags'] = [...originTags]
-    // await updateOverwrite(destin,databaseDestin[index])
-    
-    
-    
-    // return databaseDestin
+    let unique = [...new Set(existedTags)];
+    let fatherIndex = databaseDestin.findIndex((d)=> d.id == id)
+    databaseDestin[fatherIndex]['tags'] = [...unique]
+    await updateOverwrite(destin,databaseDestin[fatherIndex])
+    return unique
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']
 }

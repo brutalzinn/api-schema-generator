@@ -13,7 +13,7 @@ return databases.map((data)=>{
   .post(tagsHandler(data.database),
     baseController.createPost(data.database)
   )
-  .put(
+  .put(tagsHandler(data.database),
   baseController.editPost(data.database)
   )
   router.route(`/${data.database}/:id`)

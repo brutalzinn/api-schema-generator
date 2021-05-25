@@ -5,9 +5,24 @@ const databaseConfig = require('../../utils/database.assist.utils')
 function tagsHandler(database) {
     
     return async (req, res, next) =>{
-        let customDatabase = await databaseConfig.openCustomDatabase(database)
-        let arrayRelationTag = []
+        let relationsDatabase = await databaseConfig.openFile('config')
+        console.log('start')
+        relationsDatabase.map((config)=>{
+            if(!config['relation']){
+return
+            }
 
+if(config['relation'].map((relation)=>{
+if(relation['table'])
+}) 
+            
+          
+        })
+        console.log('end')
+        let customDatabase = await databaseConfig.openCustomDatabase(database)
+        console.log('custom db',customDatabase)
+        let arrayRelationTag = []
+        let toRemove = []
         const { body } = req;
         if(!tagEnabled){
             return next()
@@ -21,9 +36,12 @@ function tagsHandler(database) {
                     let myRelation = await openFile(relation.table)
                     if(Array.isArray(body[relation.key])){
                         await Promise.all(body[relation.key].map(async(keyArray)=>{
+                            console.log('keyarray',keyArray)
                             let result = myRelation.find((f)=>f.id == keyArray)
                             if(!result){
-                                return res.json({error:"cant find relation with " +relation.key })
+                                toRemove.push(keyArray)
+                                return
+                                //return res.status(404).json({error:"cant find relation with " +relation.key })
                             }
                             if(body[relation.key]){
                                 let customDatabaseRelation = await databaseConfig.openCustomDatabase(relation.table)
@@ -38,11 +56,14 @@ function tagsHandler(database) {
                     }else{
                         let result = myRelation.find((f)=>f.id == body[relation.key])
                         if(!result){
-                            return res.json({error:"cant find relation with " +relation.key })
+                            toRemove.push(keyArray)
+                            return
+                            
+                            //   return res.json({error:"cant find relation with " +relation.key })
                         }
                         if(body[relation.key]){
                             let customDatabaseRelation = await databaseConfig.openCustomDatabase(relation.table)
-
+                            
                             if(customDatabase['tag']){
                                 tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
                                     arrayRelationTag.push(t)
@@ -52,12 +73,23 @@ function tagsHandler(database) {
                     }
                 }))
             }
+            body[relation.key].map((tags,index)=>{
+                if(toRemove.includes(tags)){
+                    req.body[relation.key].splice(index,1)
+                }
+            })
+            
         }
+        
         await relationCreator()
+        
         let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
-       var tags = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
-          req.body = { ...body,tags}
-        console.log('ttttt',req.body)
+        var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
+        
+        let tags = [...new Set(tagsReceived)];
+        
+        req.body = { ...req.body,tags}
+        console.log('req.body',req.body)
         return next()
     }
     // if(!body['categoria']){

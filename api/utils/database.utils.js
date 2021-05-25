@@ -38,6 +38,7 @@ const updateOverwrite = async (arquivo,model) =>{
    // delete model['id']
     json[editTeste] = {...model}
     await saveFile(arquivo,json)
+    console.log('sucess overwrite')
 }
 const Insert = async (arquivo,model) =>{
     let json = await openFile(arquivo)
