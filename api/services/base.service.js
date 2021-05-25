@@ -3,7 +3,6 @@ const { tagsUtil,tagsCreator,tagsUpdate,tagsSync } = require('../utils/tags.util
 
 const create = async (database,body) => {
   //await Insert(database,createModel(body))
-
 }
 const edit = async (body) => {
 await Update('post',body)
