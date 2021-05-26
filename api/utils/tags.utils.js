@@ -44,6 +44,7 @@ const tagsSync = async (origin,destin,key,id) =>{
     if(!isEnabled()){
         return
     }
+    console.log('######origin',origin,'destin',destin,'key',key,'id',id)
     let databaseConfig = require('../utils/database.assist.utils')
     
     console.log('#######tags sycn',isEnabled())
@@ -66,8 +67,8 @@ const tagsSync = async (origin,destin,key,id) =>{
             let result = databaseOrigin.find((f)=>f.id == c)
             console.log('passou aqui 2')
             if(!result){
-                let indexCategory = father[key].findIndex((i)=>i == c)
-                father[key].splice(indexCategory,1)
+                //let indexCategory = father[key].findIndex((i)=>i == c)
+               // father[key].splice(indexCategory,1)
                 return
             }
             tagsGenerator(result,originTag).map((t)=>{
@@ -91,8 +92,9 @@ const tagsSync = async (origin,destin,key,id) =>{
     })
     let unique = [...new Set(existedTags)];
     let fatherIndex = databaseDestin.findIndex((d)=> d.id == id)
+    console.log('generate tags',unique,'for',destin)
     databaseDestin[fatherIndex]['tags'] = [...unique]
-    console.log('new destin', databaseDestin[fatherIndex])
+ 
     await updateOverwrite(destin,databaseDestin[fatherIndex])
     //  return unique
     //return destinTags.concat(originTags)

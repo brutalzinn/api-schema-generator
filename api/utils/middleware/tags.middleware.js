@@ -21,6 +21,9 @@ function tagsHandler(database) {
                     return next()
                 }
                 return await Promise.all(customDatabase['relation'].map(async (relation)=>{
+                    if(!body[relation.key]){
+                        return next()
+                    }
                     let myRelation = await openFile(relation.table)
                     if(Array.isArray(body[relation.key])){
                         await Promise.all(body[relation.key].map(async(keyArray)=>{
@@ -44,10 +47,8 @@ function tagsHandler(database) {
                     }else{
                         let result = myRelation.find((f)=>f.id == body[relation.key])
                         if(!result){
-                            toRemove.push(keyArray)
+                            delete req.body[relation.key]
                             return
-                            
-                            //   return res.json({error:"cant find relation with " +relation.key })
                         }
                         if(body[relation.key]){
                             let customDatabaseRelation = await databaseConfig.openCustomDatabase(relation.table)
@@ -59,13 +60,18 @@ function tagsHandler(database) {
                             }
                         }
                     }
+if(Array.isArray(body[relation.key])){
+    body[relation.key].map((tags,index)=>{
+        if(toRemove.includes(tags)){
+            req.body[relation.key].splice(index,1)
+        }
+    })
+}
+             
+
                 }))
             }
-            body[relation.key].map((tags,index)=>{
-                if(toRemove.includes(tags)){
-                    req.body[relation.key].splice(index,1)
-                }
-            })
+       
             
         }
         

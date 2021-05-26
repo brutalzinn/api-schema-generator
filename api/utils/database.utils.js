@@ -1,16 +1,15 @@
 const fs = require('fs');
 const uuid = require('uuid').v4;
 const path = require('path');
-const root_dir  = path.join(path.dirname(require.main.filename),'api','database')
+const root_dir = path.join(path.dirname(require.main.filename),'api','database')
 
 const openFile = async (arquivo) =>{
     let filePath = path.join(root_dir,arquivo+'.json')
     if (fs.existsSync(filePath)) {
-        
         const json =  fs.readFileSync(filePath);
         if(Object.keys(json).length == 0){
-        console.log('não foi possivel abrir. Erro critico no banco',arquivo)
-        await saveFile(arquivo,[])
+            console.log('não foi possivel abrir. Erro critico no banco',arquivo)
+            await saveFile(arquivo,[])
         }
         return JSON.parse(json)
     }else{
@@ -33,17 +32,15 @@ const Update = async (arquivo,model) =>{
 const updateOverwrite = async (arquivo,model) =>{
     let json = await openFile(arquivo)
     let copyJson = [...json]
-    var editTeste = copyJson.findIndex((item)=>item.id == model.id)
-    //delete model['id']
+    let editTeste = copyJson.findIndex((item)=>item.id == model.id)
+  //  delete model['id']
     json[editTeste] = {...model}
-    console.log('overwrite tag by',model)
     await saveFile(arquivo,json)
-    console.log('sucess overwrite')
 }
 const Insert = async (arquivo,model) =>{
     let json = await openFile(arquivo)
     json.push(model)
-   await saveFile(arquivo,json)
+    await saveFile(arquivo,json)
 }
 const Delete = async (arquivo,id) =>{
     let json = await openFile(arquivo)
@@ -54,7 +51,7 @@ const Delete = async (arquivo,id) =>{
 }
 const saveFile = async (arquivo,model) =>{
     try{
-       await fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+         fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
             if (err) throw err;
         });
         return true

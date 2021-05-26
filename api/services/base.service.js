@@ -7,7 +7,8 @@ const create = async (database,body) => {
 }
 const edit = async (database,body) => {
   await Update(database,body)
-  await relationSync(database,body)
+  console.log('meu body',body)
+ await relationSync(database,body)
   // let customDatabase = await databaseConfig.openCustomDatabase(database)
   // if(customDatabase['relation']){
   //   return await Promise.all(customDatabase['relation'].map(async (item)=>{
