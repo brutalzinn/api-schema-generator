@@ -26,9 +26,9 @@ const getCustom = async (column,value) => {
   const json = await openFile(database)
   return json.find((item)=>item[column] == value)
 }
-const del = async (database,body) => {
-  await Delete(database,body)
-  await relationSync(database,body)
+const del = async (database,id) => {
+ // await Delete(database,id)
+  await relationSync(database,{id})
 }
 
 const list = async (database) => {

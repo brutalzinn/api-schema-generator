@@ -95,11 +95,12 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
         if(Array.isArray(data[key])){
             await Promise.all(data[key].map(async (f)=>{
                 if(f == body.id){
-                    console.log('id post afetado',id)
+                    console.log('##########id post afetado',id)
                     await tagUtils.tagsSync(database,relationDatabase,key,id)
                 }
             }))
         }else{
+            console.log('trying delete',body)
             await tagUtils.tagsSync(database,relationDatabase,key,id)
         }
     }))
