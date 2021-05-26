@@ -52,7 +52,6 @@ const Update = async (arquivo,model) =>{
     await saveFile(arquivo,json)
 }
 const updateOverwrite = async (arquivo,model) =>{
-    console.log('#####model',model)
     let json = await openFile(arquivo)
     let copyJson = [...json]
     var editTeste = copyJson.findIndex((item)=>item.id == model.id)
@@ -89,30 +88,23 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
     const databaseConfig = config.find((dat)=>dat.database == database)
     const relationalConfig = config.find((dat)=>dat.database == relationDatabase)
     const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
-    
- return await Promise.all(relationDatabaseJson.map(async (data)=>{
+   
+     await Promise.all(relationDatabaseJson.map(async (data)=>{
+        let id = data.id
+        
         if(Array.isArray(data[key])){
-          await Promise.all(data[key].map(async (f)=>{
+            await Promise.all(data[key].map(async (f)=>{
                 if(f == body.id){
-                    var id = data.id
-                await tagUtils.tagsSync(database,relationDatabase,key,id)
-                   // return i.id
+                    console.log('id post afetado',id)
+                    await tagUtils.tagsSync(database,relationDatabase,key,id)
                 }
             }))
+        }else{
+            await tagUtils.tagsSync(database,relationDatabase,key,id)
         }
     }))
     
-    if(!relation){
-        console.log('#####cant find this' + database + 'associete to this '+ relation)
-        return
-    }
-    console.log('found relation with',relation)
-    console.log('config for database',databaseConfig)
-    console.log('config for relation database',relationalConfig)
-    console.log('relation creator called')
-    console.log(body)
-    console.log(database)
-    console.log(relationDatabase)
+    
 }
 
 const createDatabase = async () =>{

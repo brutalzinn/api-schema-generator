@@ -1,14 +1,13 @@
 const {openFile,createModel,Insert,Update,Delete} = require('../utils/database.utils')
 const { tagsUtil,tagsCreator,tagsUpdate,tagsSync } = require('../utils/tags.utils')
 const databaseConfig = require('../utils/database.assist.utils')
-
+const {relationSync} = require('../utils/tags.relation.assist.utils')
 const create = async (database,body) => {
   await Insert(database,createModel(body))
 }
 const edit = async (database,body) => {
-
-  console.log('body',body)
   await Update(database,body)
+  await relationSync(database,body)
   // let customDatabase = await databaseConfig.openCustomDatabase(database)
   // if(customDatabase['relation']){
   //   return await Promise.all(customDatabase['relation'].map(async (item)=>{

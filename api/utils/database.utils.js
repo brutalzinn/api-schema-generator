@@ -31,19 +31,19 @@ const Update = async (arquivo,model) =>{
     await saveFile(arquivo,json)
 }
 const updateOverwrite = async (arquivo,model) =>{
-    console.log('#####model',model)
     let json = await openFile(arquivo)
     let copyJson = [...json]
     var editTeste = copyJson.findIndex((item)=>item.id == model.id)
-   // delete model['id']
+    //delete model['id']
     json[editTeste] = {...model}
+    console.log('overwrite tag by',model)
     await saveFile(arquivo,json)
     console.log('sucess overwrite')
 }
 const Insert = async (arquivo,model) =>{
     let json = await openFile(arquivo)
     json.push(model)
-    saveFile(arquivo,json)
+   await saveFile(arquivo,json)
 }
 const Delete = async (arquivo,id) =>{
     let json = await openFile(arquivo)
@@ -54,11 +54,12 @@ const Delete = async (arquivo,id) =>{
 }
 const saveFile = async (arquivo,model) =>{
     try{
-        fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+       await fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
             if (err) throw err;
         });
         return true
     }catch(exception){
+        console.log('exception',exception)
         return false
     }
 }

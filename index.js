@@ -25,4 +25,4 @@ var comandos = '\n Você pode usar comandos para facilitar o desenvolvimento. \n
 'npm run drop-post - excluir o banco de dados de post'
 //console.log('\x1b[36m%s\x1b[0m',comandos)
 
-//console.log('restarted at ', new Date())
+console.log('restarted at ', new Date())

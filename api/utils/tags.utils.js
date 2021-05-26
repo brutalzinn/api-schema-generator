@@ -41,11 +41,11 @@ const tagsUpdate = async (arquivo,model) =>{
     return database[tagsFinder]['tags']
 }
 const tagsSync = async (origin,destin,key,id) =>{
-    // if(!isEnabled()){
-    //     return
-    // }
-    const databaseConfig = require('../utils/database.assist.utils')
-
+    if(!isEnabled()){
+        return
+    }
+    let databaseConfig = require('../utils/database.assist.utils')
+    
     console.log('#######tags sycn',isEnabled())
     const databaseOrigin = await openFile(origin) //categoria
     const databaseDestin = await openFile(destin) //post
@@ -56,13 +56,15 @@ const tagsSync = async (origin,destin,key,id) =>{
     
     let existedTags = []
     let father = databaseDestin.find((d)=> d.id == id)
-    console.log('father',father)
+    console.log('chaging father id',father.id)
     if(!father){
         return
     }
+    console.log('passou aqui 1')
     if(Array.isArray(father[key])){
         father[key].map((c)=>{
             let result = databaseOrigin.find((f)=>f.id == c)
+            console.log('passou aqui 2')
             if(!result){
                 let indexCategory = father[key].findIndex((i)=>i == c)
                 father[key].splice(indexCategory,1)
@@ -90,8 +92,9 @@ const tagsSync = async (origin,destin,key,id) =>{
     let unique = [...new Set(existedTags)];
     let fatherIndex = databaseDestin.findIndex((d)=> d.id == id)
     databaseDestin[fatherIndex]['tags'] = [...unique]
+    console.log('new destin', databaseDestin[fatherIndex])
     await updateOverwrite(destin,databaseDestin[fatherIndex])
-  //  return unique
+    //  return unique
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']
 }
