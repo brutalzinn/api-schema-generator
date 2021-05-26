@@ -28,12 +28,7 @@ const getCustom = async (column,value) => {
 }
 const del = async (database,body) => {
   await Delete(database,body)
-  let customDatabase = await databaseConfig.openCustomDatabase(database)
-  if(customDatabase['relation']){
-    return await Promise.all(customDatabase['relation'].map(async (item)=>{
-      await tagsSync(item.table,database,item.key,body)
-    }))  
-  }
+  await relationSync(database,body)
 }
 
 const list = async (database) => {

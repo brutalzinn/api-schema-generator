@@ -5,7 +5,7 @@ const databaseConfig = require('../../utils/database.assist.utils')
 function tagsHandler(database) {
     
     return async (req, res, next) =>{
-
+        
         console.log('end')
         let customDatabase = await databaseConfig.openCustomDatabase(database)
         //console.log('custom db',customDatabase)
@@ -15,63 +15,82 @@ function tagsHandler(database) {
         if(!tagEnabled){
             return next()
         }
+        
+        const relationAsync = async (body,table,key) =>{
+            
+            let myRelation = await openFile(table)
+            
+            if(Array.isArray(body[key])){
+                await Promise.all(body[key].map(async(keyArray)=>{
+                    let result = myRelation.find((f)=>f.id == keyArray)
+                    if(!result){
+                        toRemove.push(keyArray)
+                        return
+                        //return res.status(404).json({error:"cant find relation with " +key })
+                    }
+                    if(body[key]){
+                        let customDatabaseRelation = await databaseConfig.openCustomDatabase(table)
+                        if(customDatabase['tag']){
+                            tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
+                                arrayRelationTag.push(t)
+                            })
+                        }
+                    }
+                }))
+            }else{
+                let result = myRelation.find((f)=>f.id == body[key])
+                console.log('########relation async no array',result)
+                if(!result){
+                    delete req.body[key]
+                    return
+                }
+                if(body[key]){
+                    let customDatabaseRelation = await databaseConfig.openCustomDatabase(table)
+                    if(customDatabase['tag']){
+                        tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
+                            arrayRelationTag.push(t)
+                        })
+                    }
+                }
+            }
+            if(Array.isArray(body[key])){
+                body[key].map((tags,index)=>{
+                    if(toRemove.includes(tags)){
+                        req.body[key].splice(index,1)
+                    }
+                })
+            }
+            
+        }
         const relationCreator = async ()=>{
             if(Array.isArray(customDatabase['tag'])){
                 if(!customDatabase['relation']){
                     return next()
                 }
-                return await Promise.all(customDatabase['relation'].map(async (relation)=>{
+                await Promise.all(customDatabase['relation'].map(async (relation)=>{
                     if(!body[relation.key]){
-                        return next()
-                    }
-                    let myRelation = await openFile(relation.table)
-                    if(Array.isArray(body[relation.key])){
-                        await Promise.all(body[relation.key].map(async(keyArray)=>{
-                            console.log('keyarray',keyArray)
-                            let result = myRelation.find((f)=>f.id == keyArray)
-                            if(!result){
-                                toRemove.push(keyArray)
+                        var databaseChecker = await openFile(database)
+                        if(body['id']){
+                            let finder = databaseChecker.find((data)=>data.id == body['id'])
+                            if(!finder){
                                 return
-                                //return res.status(404).json({error:"cant find relation with " +relation.key })
-                            }
-                            if(body[relation.key]){
-                                let customDatabaseRelation = await databaseConfig.openCustomDatabase(relation.table)
-                                if(customDatabase['tag']){
-                                    tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
-                                        arrayRelationTag.push(t)
-                                    })
-                                }
-                            }
-                            
-                        }))
-                    }else{
-                        let result = myRelation.find((f)=>f.id == body[relation.key])
-                        if(!result){
-                            delete req.body[relation.key]
-                            return
-                        }
-                        if(body[relation.key]){
-                            let customDatabaseRelation = await databaseConfig.openCustomDatabase(relation.table)
-                            
-                            if(customDatabase['tag']){
-                                tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
-                                    arrayRelationTag.push(t)
-                                })
-                            }
-                        }
-                    }
-if(Array.isArray(body[relation.key])){
-    body[relation.key].map((tags,index)=>{
-        if(toRemove.includes(tags)){
-            req.body[relation.key].splice(index,1)
-        }
-    })
-}
-             
+                            }else{
+                                console.log('vindo finder',finder)
 
+                                await relationAsync(finder,relation.table,relation.key)
+                            }
+                        }
+                        
+                        //return next()
+                    }
+                    if(body[relation.key]){
+                        await relationAsync(body,relation.table,relation.key)
+                    }
+                    
+                    
                 }))
             }
-       
+            
             
         }
         
