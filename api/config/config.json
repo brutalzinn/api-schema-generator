@@ -1,1 +1,1 @@
-[{"database":"post","config":{"tag":[{"abacate":"false"},{"teste":"false"}]}}]
+[{"database":"post","config":{"tag":[{"generateall":"true"}]},"tag":["titulo"],"relation":[{"table":"categoria","key":"categoria"}]},{"database":"categoria","tag":["nome"],"config":{"tag":[{"generatesimple":false}]}}]

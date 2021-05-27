@@ -12,10 +12,32 @@ function tagsHandler(database) {
         let arrayRelationTag = []
         let toRemove = []
         const { body } = req;
-        if(!tagEnabled){
+        let generateAll = false
+        let generatesimple = false
+  
+
+        if(customDatabase['config'] &&  customDatabase['config']['tag']){
+            customDatabase['config']['tag'].map((item,index)=>{           
+                if(customDatabase['config']['tag'][index]['generateall'] != undefined){
+                    generateAll = (customDatabase['config']['tag'][index]['generateall'] === true)
+                }   
+                if(customDatabase['config']['tag'][index]['generatesimple'] != undefined){
+                    generatesimple = (customDatabase['config']['tag'][index]['generatesimple'] === true)
+                }   
+            })
+        }else{
             return next()
         }
-        
+        console.log('não deveria executar',generateAll,generatesimple)
+
+        if(!generateAll){
+            console.log('generate all false')
+            if(!generatesimple){
+                console.log('generate simple false')
+                console.log('######testeeee')
+                return next()
+            }
+        }
         const relationAsync = async (body,table,key) =>{
             
             let myRelation = await openFile(table)
@@ -36,6 +58,11 @@ function tagsHandler(database) {
                         }
                     }
                 }))
+                body[key].map((tags,index)=>{
+                    if(toRemove.includes(tags)){
+                        req.body[key].splice(index,1)
+                    }
+                })
             }else{
                 let result = myRelation.find((f)=>f.id == body[key])
                 console.log('########relation async no array',result)
@@ -52,20 +79,19 @@ function tagsHandler(database) {
                     }
                 }
             }
-            if(Array.isArray(body[key])){
-                body[key].map((tags,index)=>{
-                    if(toRemove.includes(tags)){
-                        req.body[key].splice(index,1)
-                    }
-                })
-            }
+            
             
         }
+
         const relationCreator = async ()=>{
+            
+            
             if(Array.isArray(customDatabase['tag'])){
+                
+                
                 if(!customDatabase['relation']){
                     console.log('ignorando relation of table',database)
-                    return next()
+                    return 
                 }
                 await Promise.all(customDatabase['relation'].map(async (relation)=>{
                     if(!body[relation.key]){
@@ -76,7 +102,7 @@ function tagsHandler(database) {
                                 return
                             }else{
                                 console.log('vindo finder',finder)
-
+                                
                                 await relationAsync(finder,relation.table,relation.key)
                             }
                         }
@@ -93,16 +119,22 @@ function tagsHandler(database) {
             
             
         }
+        if(generateAll){
+            await relationCreator()
+        }else{
+            console.log('cant use generateAll for all relations of this table.')
+        }
+  
         
-        await relationCreator()
+            console.log('gewrando tag')
+            let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
+            var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
+            
+            let tags = [...new Set(tagsReceived)];
+            
+            req.body = { ...req.body,tags}
+            console.log('req.body',req.body)
         
-        let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
-        var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
-        
-        let tags = [...new Set(tagsReceived)];
-        
-        req.body = { ...req.body,tags}
-        console.log('req.body',req.body)
         return next()
     }
     // if(!body['categoria']){

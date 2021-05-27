@@ -41,8 +41,8 @@ const updateOverwrite = async (arquivo,data) =>{
         }
         json[editTeste] = {...item}
     })
-console.log('novo json',json)
-   await saveFile(arquivo,json)
+    console.log('novo json',json)
+    await saveFile(arquivo,json)
     console.log('deu tudo',teste)
 }
 const Insert = async (arquivo,model) =>{
@@ -62,7 +62,7 @@ const Delete = async (arquivo,id) =>{
 }
 const saveFile = async (arquivo,model) =>{
     try{
-         fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+        fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
             if (err) throw err;
         });
         return true
