@@ -1,1 +1,1 @@
-[]
+[{"database":"teste","relation":[{"table":"categoria","key":"categoria"},{"table":"post","key":"post"}]},{"database":"categoria"},{"database":"post"}]
