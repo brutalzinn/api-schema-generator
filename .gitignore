@@ -5,3 +5,4 @@ docker.env
 Dockerfile
 package-lock.json
 api/database/
+api/config/
