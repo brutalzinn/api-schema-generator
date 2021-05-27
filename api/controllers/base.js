@@ -2,7 +2,7 @@
 const {create,list,del,edit,get,getCustom} = require('../services/base.service');
 
 
-function createPost(database){
+async function createPost(database){
   
   return async (req,res,next) => {
     const { body } = req;
@@ -13,7 +13,7 @@ function createPost(database){
   }
 }
 
-function delPost(database){
+async function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
     await del(database,id)
@@ -25,7 +25,7 @@ function delPost(database){
 }
 
 
-function getPost(database){ 
+async function getPost(database){ 
   return async (req,res,next) => {
     const {id} = req.params
     const response = await get(database,id)
@@ -33,7 +33,7 @@ function getPost(database){
     return res.status(200).json(response)
   }
 }
-function lista(database){
+async function lista(database){
   
   return async (req,res,next) => {
     const response = await list(database)
@@ -42,13 +42,20 @@ function lista(database){
   }
 }
 
-function editPost(database){
+async function editPost(database){
   return async (req,res,next) => {
-    const { body } = req;
-    await edit(database,body)
-    return res.status(200).send({
-      mensagem: "Post alterado com sucesso."
-    });
+    const { body } = req
+    try{
+      await edit(database,body)
+      res.status(200).send({
+        mensagem: "Post alterado com sucesso."
+      });
+    }catch(exception){
+      res.status(200).send({
+        mensagem: exception
+      });
+    }
+
   }
 }
 

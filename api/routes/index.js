@@ -8,7 +8,7 @@ const routesV1Search = require('./v1/extra/search');
 
 
 
-module.exports = (app) => {
+module.exports = async (app) => {
 
   app.get('/', (req, res, next) => {
     res.send({ name, version });
@@ -17,7 +17,7 @@ module.exports = (app) => {
   const routesV1 = Router();
 
   routesV1Search(routesV1);
-  routesBase(routesV1);
+ await routesBase(routesV1);
 
 
   app.use('/v1', routesV1);

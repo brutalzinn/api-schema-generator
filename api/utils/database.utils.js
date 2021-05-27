@@ -25,17 +25,25 @@ const Update = async (arquivo,model) =>{
     let json = await openFile(arquivo)
     let copyJson = [...json]
     var editTeste = copyJson.findIndex((item)=>item.id == model.id)
+    if(editTeste == -1){
+        return false
+    }
     delete model['id']
     json[editTeste] = {...json[editTeste],...model}
     await saveFile(arquivo,json)
 }
-const updateOverwrite = async (arquivo,model) =>{
+const updateOverwrite = async (arquivo,data) =>{
     let json = await openFile(arquivo)
-    let copyJson = [...json]
-    let editTeste = copyJson.findIndex((item)=>item.id == model.id)
-  //  delete model['id']
-    json[editTeste] = {...model}
-    await saveFile(arquivo,json)
+    data.map((item)=>{
+        let editTeste = json.findIndex((v)=>v.id == item.id)
+        if(editTeste == -1){
+            return
+        }
+        json[editTeste] = {...item}
+    })
+console.log('novo json',json)
+   await saveFile(arquivo,json)
+    console.log('deu tudo',teste)
 }
 const Insert = async (arquivo,model) =>{
     let json = await openFile(arquivo)
@@ -46,6 +54,9 @@ const Delete = async (arquivo,id) =>{
     let json = await openFile(arquivo)
     let copyJson = [...json]
     var editTeste = copyJson.findIndex((item)=>item.id == id)
+    if(editTeste == -1){
+        return false
+    }
     json.splice(editTeste,1)
     await saveFile(arquivo,json)
 }

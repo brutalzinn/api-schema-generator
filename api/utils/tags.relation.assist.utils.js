@@ -9,7 +9,8 @@ const relationSync = async (database,model) => {
         await Promise.all(config['relation'].map(async (relation)=>{
             if(relation['table'] == database){
                 console.log(`banco ${database} possui alguma relação com ${config.database}`)
-                console.log('deletanmdo body',model)
+                console.log('alterando ou deletado body',model.id)
+                
                 await databaseConfig.relationCreator(model,database,config.database,relation['key'])
             }
         })) 

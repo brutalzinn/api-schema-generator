@@ -41,7 +41,7 @@ const tagsUpdate = async (arquivo,model) =>{
     return database[tagsFinder]['tags']
 }
 const tagsSync = async (origin,destin,key,id) =>{
-
+    
     console.log('######origin',origin,'destin',destin,'key',key,'id',id)
     let databaseConfig = require('../utils/database.assist.utils')
     
@@ -56,29 +56,30 @@ const tagsSync = async (origin,destin,key,id) =>{
     let existedTags = []
     let father = databaseDestin.find((d)=> d.id == id)
     if(!father){
+        console.log('############não encontrei',father.id)
         return
+    }else{
+        console.log("###ecnontrei",father.id)
     }
-    const regenerate = async () =>{
-        tagsGenerator(father,destinTag).map((t)=>{
-            existedTags.push(t)
-        })
-        let unique = [...new Set(existedTags)];
-        father['tags'] = [...unique]
-        await updateOverwrite(destin,father)
-    }
+    
     if(Array.isArray(father[key])){
         await Promise.all(father[key].map( async (c)=>{
+            console.log('promise executou  aqui')
             let result = databaseOrigin.find((f)=>f.id == c)
             if(!result){
+                console.log('id',c, ' não existe')
                 let indexCategory = father[key].findIndex((i)=>i == c)
-               father[key].splice(indexCategory,1)
+                father[key].splice(indexCategory,1)
             }else{
                 tagsGenerator(result,originTag).map((t)=>{
                     existedTags.push(t)
                 })
             }
-
+            
         }))
+        if(father[key].length == 0){
+            delete father[key]
+        }
     }else{
         let result = databaseOrigin.find((f)=>f.id == father[key])
         if(!result){
@@ -90,7 +91,14 @@ const tagsSync = async (origin,destin,key,id) =>{
             })
         }
     }
-await regenerate()
+    tagsGenerator(father,destinTag).map((t)=>{
+        existedTags.push(t)
+    })
+    
+    let unique = [...new Set(existedTags)];
+    
+    return [...unique]
+   // await updateOverwrite(destin,father)
     //  return unique
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']

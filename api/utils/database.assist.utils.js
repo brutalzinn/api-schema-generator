@@ -88,21 +88,26 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
     const databaseConfig = config.find((dat)=>dat.database == database)
     const relationalConfig = config.find((dat)=>dat.database == relationDatabase)
     const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
-   
-     await Promise.all(relationDatabaseJson.map(async (data)=>{
+    let toUpdate = []
+    await Promise.all(relationDatabaseJson.map(async (data)=>{
         let id = data.id
         if(Array.isArray(data[key])){
             await Promise.all(data[key].map(async (f)=>{
                 if(f == body.id){
-                    console.log('##########id post afetado',id)
-                    await tagUtils.tagsSync(database,relationDatabase,key,id)
+                    let tags = await tagUtils.tagsSync(database,relationDatabase,key,id)
+                    data['tags'] = tags
+                    toUpdate.push(data)
                 }
             }))
         }else{
             console.log('trying delete',body)
+            console.log('##########id post afetado',id)
+            
             await tagUtils.tagsSync(database,relationDatabase,key,id)
         }
     }))
+
+    await databaseHandler.updateOverwrite(relationDatabase,toUpdate)
     
     
 }

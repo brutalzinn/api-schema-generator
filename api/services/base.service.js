@@ -6,17 +6,11 @@ const create = async (database,body) => {
   await Insert(database,createModel(body))
 }
 const edit = async (database,body) => {
+  console.log('momento 1',body)
+  const {id} = body
   await Update(database,body)
-  console.log('meu body',body)
- await relationSync(database,body)
-  // let customDatabase = await databaseConfig.openCustomDatabase(database)
-  // if(customDatabase['relation']){
-  //   return await Promise.all(customDatabase['relation'].map(async (item)=>{
-  //     await tagsSync(item.table,database,item.key,id)
-  //   }))  
-  // }
-  
-  // await tagsSync('categoria','post','categoria')
+
+  await relationSync(database,{...body,id})
 }
 const get = async (database,id) => {
   const json = await openFile(database)
@@ -27,7 +21,7 @@ const getCustom = async (column,value) => {
   return json.find((item)=>item[column] == value)
 }
 const del = async (database,id) => {
- await Delete(database,id)
+  await Delete(database,id)
   await relationSync(database,{id})
 }
 

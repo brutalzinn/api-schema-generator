@@ -3,26 +3,25 @@ const {tagsHandler} = require('../../utils/middleware/tags.middleware')
 const {saveFile,openFile} = require('../../utils/database.assist.utils')
 
 module.exports = async (router) => {
-var databases = await openFile('config')
-return databases.map((data)=>{
-
+  const databases = await openFile('config')
+return await Promise.all(databases.map(async(data)=>{
   router.route(`/${data.database}`)
   .get(
-    baseController.lista(data.database)
+   await baseController.lista(data.database)
   )
   .post(tagsHandler(data.database),
-    baseController.createPost(data.database)
+    await baseController.createPost(data.database)
   )
   .put(tagsHandler(data.database),
-  baseController.editPost(data.database)
+ await baseController.editPost(data.database)
   )
   router.route(`/${data.database}/:id`)
   .delete(
-  baseController.delPost(data.database)
+ await baseController.delPost(data.database)
   )
   router.route(`/${data.database}/:id`)
   .get(
-    baseController.getPost(data.database)
+   await baseController.getPost(data.database)
   )
 
 
@@ -32,7 +31,7 @@ return databases.map((data)=>{
 
 
 
-})
+}))
  
 
     

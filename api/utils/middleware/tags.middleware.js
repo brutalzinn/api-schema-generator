@@ -64,6 +64,7 @@ function tagsHandler(database) {
         const relationCreator = async ()=>{
             if(Array.isArray(customDatabase['tag'])){
                 if(!customDatabase['relation']){
+                    console.log('ignorando relation of table',database)
                     return next()
                 }
                 await Promise.all(customDatabase['relation'].map(async (relation)=>{
