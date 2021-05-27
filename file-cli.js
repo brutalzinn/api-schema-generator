@@ -9,6 +9,9 @@ var myArgs = process.argv.slice(2);
 const executor = async(myArgs) =>{
   switch(myArgs[0]){
     
+    case 'clear':
+       fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
+       break
     case 'drop':
     let dropDatabase = async (database) =>{
       fs.unlinkSync(path.join(root_dir,'database',database+'.json'))
