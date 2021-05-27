@@ -1,1 +1,1 @@
-[{"database":"post","tag":["titulo"],"relation":[{"table":"categoria","key":"categoria"}]},{"database":"categoria","tag":["nome"]}]
+[{"database":"categoria","tag":["nome"]},{"database":"post","tag":["interesse","titulo"],"relation":[{"table":"categoria","key":"categoria"}]}]

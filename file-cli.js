@@ -10,7 +10,18 @@ var myArgs = process.argv.slice(2);
 switch(myArgs[0]){
   
   case 'drop':
-  fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
+    let dropDatabase = async (database) =>{
+  fs.unlinkSync(path.join(root_dir,'database',database+'.json'))
+  let databases = await openFile('config')
+databases.map((data,index)=>{
+  if(data.database == database){
+    databases.splice(index,1)
+    return
+  }
+})
+await saveFile('config',databases)
+    }
+    dropDatabase(myArgs[1])
   console.log(`database ${myArgs[1]} are sucefull dropped`)
   break;
   case 'create':
