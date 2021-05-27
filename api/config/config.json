@@ -1,1 +1,1 @@
-[{"database":"categoria","tag":["nome"]},{"database":"post","tag":["interesse","titulo"],"relation":[{"table":"categoria","key":"categoria"}]}]
+[{"database":"post","config":{"tag":[{"abacate":"false"},{"teste":"false"}]}}]
