@@ -91,7 +91,6 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
    
      await Promise.all(relationDatabaseJson.map(async (data)=>{
         let id = data.id
-        
         if(Array.isArray(data[key])){
             await Promise.all(data[key].map(async (f)=>{
                 if(f == body.id){

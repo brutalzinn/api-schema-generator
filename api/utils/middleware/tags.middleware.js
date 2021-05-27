@@ -26,7 +26,6 @@ function tagsHandler(database) {
                     if(!result){
                         toRemove.push(keyArray)
                         return
-                        //return res.status(404).json({error:"cant find relation with " +key })
                     }
                     if(body[key]){
                         let customDatabaseRelation = await databaseConfig.openCustomDatabase(table)

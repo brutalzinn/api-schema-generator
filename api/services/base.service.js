@@ -27,7 +27,7 @@ const getCustom = async (column,value) => {
   return json.find((item)=>item[column] == value)
 }
 const del = async (database,id) => {
- // await Delete(database,id)
+ await Delete(database,id)
   await relationSync(database,{id})
 }
 

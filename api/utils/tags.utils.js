@@ -41,9 +41,7 @@ const tagsUpdate = async (arquivo,model) =>{
     return database[tagsFinder]['tags']
 }
 const tagsSync = async (origin,destin,key,id) =>{
-    if(!isEnabled()){
-        return
-    }
+
     console.log('######origin',origin,'destin',destin,'key',key,'id',id)
     let databaseConfig = require('../utils/database.assist.utils')
     
@@ -57,45 +55,42 @@ const tagsSync = async (origin,destin,key,id) =>{
     
     let existedTags = []
     let father = databaseDestin.find((d)=> d.id == id)
-    console.log('chaging father id',father.id)
     if(!father){
         return
     }
-    console.log('passou aqui 1')
-    if(Array.isArray(father[key])){
-        father[key].map((c)=>{
-            let result = databaseOrigin.find((f)=>f.id == c)
-            console.log('passou aqui 2')
-            if(!result){
-                //let indexCategory = father[key].findIndex((i)=>i == c)
-               // father[key].splice(indexCategory,1)
-                return
-            }
-            tagsGenerator(result,originTag).map((t)=>{
-                existedTags.push(t)
-            })
+    const regenerate = async () =>{
+        tagsGenerator(father,destinTag).map((t)=>{
+            existedTags.push(t)
         })
+        let unique = [...new Set(existedTags)];
+        father['tags'] = [...unique]
+        await updateOverwrite(destin,father)
+    }
+    if(Array.isArray(father[key])){
+        await Promise.all(father[key].map( async (c)=>{
+            let result = databaseOrigin.find((f)=>f.id == c)
+            if(!result){
+                let indexCategory = father[key].findIndex((i)=>i == c)
+               father[key].splice(indexCategory,1)
+            }else{
+                tagsGenerator(result,originTag).map((t)=>{
+                    existedTags.push(t)
+                })
+            }
+
+        }))
     }else{
         let result = databaseOrigin.find((f)=>f.id == father[key])
         if(!result){
-            return
+            delete father[key]
+            console.log('tentando deletar esse cara aqui',father[key])
+        }else{
+            tagsGenerator(result,originTag).map((t)=>{
+                existedTags.push(t)
+            })
         }
-        tagsGenerator(result,originTag).map((t)=>{
-            existedTags.push(t)
-        })
     }
-    
-    
-    
-    tagsGenerator(father,destinTag).map((t)=>{
-        existedTags.push(t)
-    })
-    let unique = [...new Set(existedTags)];
-    let fatherIndex = databaseDestin.findIndex((d)=> d.id == id)
-    console.log('generate tags',unique,'for',destin)
-    databaseDestin[fatherIndex]['tags'] = [...unique]
- 
-    await updateOverwrite(destin,databaseDestin[fatherIndex])
+await regenerate()
     //  return unique
     //return destinTags.concat(originTags)
     //  return database[tagsFinder]['tags']
