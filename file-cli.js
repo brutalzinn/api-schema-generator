@@ -109,8 +109,5 @@ await saveFile('config',databases)
     console.log(`The health of ${myArgs[1]} has 100% OK`)
   }
   break;
-  case 'create':
-  
-  break;
   
 }
