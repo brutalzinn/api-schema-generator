@@ -1,6 +1,7 @@
 const configHandler ={
     "tag":["generateall","generatesimple","teste"],
-    "search":["enable"]
+    "search":["enable"],
+    "remove":["relation","tag"]
 }
 
 

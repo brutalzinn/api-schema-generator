@@ -35,7 +35,26 @@ const executor = async(myArgs) =>{
       await databaseSave.openFile(database)
       console.log(`database ${database} are sucefull created`)
     }
-    createDatabase(myArgs[1])
+    case 'remove':
+      let removeDatabaseOption = async (database) =>{
+        let databases = await openFile('config')
+        if(!verifyCommand(myArgs)){
+          console.log("invalid command")
+          return
+        }
+        console.log(myArgs[1],myArgs[2])
+        let finder = databases.findIndex((item)=>item.database === myArgs[1])
+        for(var item in databases[finder]){
+          if(item == myArgs[2]){
+          delete databases[finder][item]
+            //return
+          }
+        }
+     
+        await saveFile('config',databases)
+        console.log(`Key ${myArgs[2]} are sucefull removed of config`)
+      }
+    removeDatabaseOption(myArgs[1])
     break;
     case 'tag':
     console.log('creating tag to database',myArgs[1])
@@ -92,7 +111,7 @@ const executor = async(myArgs) =>{
     if(myArgs[2] == 'remove'){
       console.log('trying to remove..',myArgs[3])
       if(databases[finder]['config'] && databases[finder]['config'][myArgs[3]] && databases[finder]['config'][myArgs[3]].length == 0){
-       delete databases[finder]['config'][myArgs[3]]
+        delete databases[finder]['config'][myArgs[3]]
       }
       if(databases[finder]['config'] && Object.keys(databases[finder]['config']).length == 0){
         delete databases[finder]['config']
@@ -110,7 +129,7 @@ const executor = async(myArgs) =>{
             })
           }
           console.log('testess')
-      }
+        }
       }
     }else{
       
