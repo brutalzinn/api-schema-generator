@@ -6,15 +6,16 @@ const create = async (database,body) => {
   await Insert(database,createModel(body))
 }
 const edit = async (database,body) => {
-  console.log('momento 1',body)
   const {id} = body
-  await Update(database,body)
-
+  const update = await Update(database,body)
+  if(!update){
+    return false
+  }
   await relationSync(database,{...body,id})
 }
 const get = async (database,id) => {
   const json = await openFile(database)
-  return json.find((item)=>item.id == id)
+  return json.find((item)=>item.id == id) || false
 }
 const getCustom = async (column,value) => {
   const json = await openFile(database)
@@ -26,7 +27,11 @@ const del = async (database,id) => {
 }
 
 const list = async (database) => {
-  return await openFile(database)
+  let response = await openFile(database)
+  if(response.length == 0){
+    return false
+  }
+  return response
 }
 
 module.exports = {
