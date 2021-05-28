@@ -1,5 +1,5 @@
 
-const config = require('./config')
+const config = require('./handler')
 
 const checkCommand = (command,args) =>{
     console.log('teste',command)
