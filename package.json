@@ -8,7 +8,7 @@
     "drop-categoria": "node file-cli.js drop categoria",
     "drop-post": "node file-cli.js drop post",
     "about": "node file-cli.js about",
-    "api": "node file-cli.js"
+    "cli": "node file-cli.js"
   },
   "author": "",
   "license": "ISC",

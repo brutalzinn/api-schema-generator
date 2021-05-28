@@ -1,7 +1,7 @@
-const databaseSave = require('./api/utils/database.utils')
-const {verifyCommand} = require('./cli/commands')
-const {saveFile,openFile} = require('./api/utils/database.assist.utils')
-const config = (myArgs) =>{
+const databaseSave = require('../../api/utils/database.utils')
+const {verifyCommand} = require('../commands')
+const {saveFile,openFile} = require('../../api/utils/database.assist.utils')
+const config = async (myArgs) =>{
     let databases = await openFile('config')
     let finder = databases.findIndex((item)=>item.database === myArgs[1])
     if(finder === -1){
@@ -90,6 +90,8 @@ const config = (myArgs) =>{
         databases[finder]['config']= {[myArgs[2]]:[{[myArgs[3]]:value}]}        
       }
 }
+await saveFile('config',databases)
+
 }
 
 
