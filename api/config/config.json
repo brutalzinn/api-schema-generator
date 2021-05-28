@@ -1,1 +1,1 @@
-[{"database":"post","relation":[{"table":"teste","key":"teste"},{"table":"categoria","key":"cat"}],"tag":["titulo","interesse"],"config":{"search":[{"enable":true}],"tag":[{"generatesimple":false},{"generateall":false}]}},{"database":"teste"},{"database":"categoria","config":{"tag":[{"generatesimple":false},{"generateall":false}]}}]
+[{"database":"post","relation":[{"table":"teste","key":"teste"},{"table":"categoria","key":"cat"}],"tag":["titulo","interesse"]},{"database":"teste"},{"database":"categoria","config":{"tag":[{"generatesimple":false},{"generateall":false}]}}]
