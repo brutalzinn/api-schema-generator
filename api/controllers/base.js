@@ -6,9 +6,15 @@ async function createPost(database){
   
   return async (req,res,next) => {
     const { body } = req;
-    await create(database,body)
+  const response = await create(database,body)
+  console.log('created',response)
+  if(!response){
     return res.status(200).send({
-      mensagem: "Post registrado com sucesso."
+       mensagem: `A unexpected error on ${database} collection`
+     });
+   }
+    return res.status(200).send({
+      mensagem: `successful registred ${database} collection`
     });
   }
 }
@@ -16,9 +22,14 @@ async function createPost(database){
 async function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
-    await del(database,id)
+    const response = await del(database,id)
+    if(!response){
+      return res.status(200).send({
+         mensagem: `${req.body.id} can't be found on ${database} collection`
+       });
+     }
     return res.status(200).send({
-      mensagem: "Post deletado com sucesso."
+      mensagem: `${req.body.id} successful deleted ${database} collection`
     });
     
   }
@@ -30,7 +41,7 @@ async function getPost(database){
     const {id} = req.params
     const response = await get(database,id)
     if(!response){
-      res.status(200).send({
+     return res.status(200).send({
         mensagem: `${id} can't be found on ${database} collection`
       });
     }
@@ -42,7 +53,7 @@ async function lista(database){
   return async (req,res,next) => {
     const response = await list(database)
     if(!response){
-      res.status(200).send({
+     return res.status(200).send({
         mensagem: `Collection ${database} is empty`
       });
     }
@@ -53,17 +64,18 @@ async function lista(database){
 async function editPost(database){
   return async (req,res,next) => {
     const { body } = req
-   
+    const {id} = body
+
       const response = await edit(database,body)
     
       if(!response){
        return res.status(200).send({
-          mensagem: `${req.body.id} can't be found on ${database} collection`
+          mensagem: `${id} can't be found on ${database} collection`
         });
       }
     
-      res.status(200).send({
-        mensagem: "Post alterado com sucesso."
+     return res.status(200).send({
+        mensagem: `${id} successful updated ${database} collection`
       });
     
 

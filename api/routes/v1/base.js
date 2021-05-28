@@ -1,5 +1,6 @@
 const baseController = require('../../controllers/base');
 const {tagsHandler} = require('../../utils/middleware/tags.middleware')
+const {relationHandler} = require('../../utils/middleware/relations.middleware')
 const {saveFile,openFile} = require('../../utils/database.assist.utils')
 
 module.exports = async (router) => {
@@ -9,7 +10,7 @@ module.exports = async (router) => {
     .get(
       await baseController.lista(data.database)
       )
-      .post(tagsHandler(data.database),
+      .post(relationHandler(data.database),tagsHandler(data.database),
       await baseController.createPost(data.database)
       )
       .put(tagsHandler(data.database),

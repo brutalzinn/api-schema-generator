@@ -3,15 +3,16 @@ const { tagsUtil,tagsCreator,tagsUpdate,tagsSync } = require('../utils/tags.util
 const databaseConfig = require('../utils/database.assist.utils')
 const {relationSync} = require('../utils/tags.relation.assist.utils')
 const create = async (database,body) => {
-  await Insert(database,createModel(body))
+  const created = await Insert(database,createModel(body))
+return created
 }
 const edit = async (database,body) => {
   const {id} = body
   const update = await Update(database,body)
-  if(!update){
-    return false
-  }
+  console.log('update',update)
   await relationSync(database,{...body,id})
+  return update
+
 }
 const get = async (database,id) => {
   const json = await openFile(database)
@@ -22,7 +23,10 @@ const getCustom = async (column,value) => {
   return json.find((item)=>item[column] == value)
 }
 const del = async (database,id) => {
-  await Delete(database,id)
+ const deleteDb = await Delete(database,id)
+  if(!deleteDb){
+    return false
+  }
   await relationSync(database,{id})
 }
 

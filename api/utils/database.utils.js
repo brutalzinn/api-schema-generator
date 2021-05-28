@@ -31,13 +31,14 @@ const Update = async (arquivo,model) =>{
     delete model['id']
     json[editTeste] = {...json[editTeste],...model}
     await saveFile(arquivo,json)
+    return true
 }
 const updateOverwrite = async (arquivo,data) =>{
     let json = await openFile(arquivo)
     data.map((item)=>{
         let editTeste = json.findIndex((v)=>v.id == item.id)
         if(editTeste == -1){
-            return
+            return false
         }
         json[editTeste] = {...item}
     })
@@ -46,9 +47,14 @@ const updateOverwrite = async (arquivo,data) =>{
     console.log('deu tudo',teste)
 }
 const Insert = async (arquivo,model) =>{
-    let json = await openFile(arquivo)
-    json.push(model)
-    await saveFile(arquivo,json)
+    try{
+        let json = await openFile(arquivo)
+        json.push(model)
+        await saveFile(arquivo,json)
+        return true
+    }catch(exception){
+        return false
+    }
 }
 const Delete = async (arquivo,id) =>{
     let json = await openFile(arquivo)
@@ -62,7 +68,7 @@ const Delete = async (arquivo,id) =>{
 }
 const saveFile = async (arquivo,model) =>{
     try{
-       await fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+        await fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
             if (err) throw err;
         });
         return true
