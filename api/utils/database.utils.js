@@ -62,7 +62,7 @@ const Delete = async (arquivo,id) =>{
 }
 const saveFile = async (arquivo,model) =>{
     try{
-        fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+       await fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
             if (err) throw err;
         });
         return true

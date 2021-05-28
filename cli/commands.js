@@ -6,6 +6,7 @@ const checkCommand = (command,args) =>{
     args = args.toLocaleLowerCase()
     if(Array.isArray(config.configHandler[command])){
         return config.configHandler[command].includes(args)
+    
     }
     
 }
@@ -15,7 +16,10 @@ const verifyCommand = (command) => {
         switch(command[2]){
             case 'tag':
             return checkCommand(command[2],command[3])
+            case 'search':
+            return checkCommand(command[2],command[3])
         }
+        
         break
     }
     

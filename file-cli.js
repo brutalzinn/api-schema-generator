@@ -10,8 +10,8 @@ const executor = async(myArgs) =>{
   switch(myArgs[0]){
     
     case 'clear':
-       fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
-       break
+    fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
+    break
     case 'drop':
     let dropDatabase = async (database) =>{
       fs.unlinkSync(path.join(root_dir,'database',database+'.json'))
@@ -76,8 +76,13 @@ const executor = async(myArgs) =>{
     console.log(`Setting config ${myArgs[1]} for ${myArgs[2]}=${myArgs[3]}`)
     let databases = await openFile('config')
     let finder = databases.findIndex((item)=>item.database === myArgs[1])
+    
+    if(finder === -1){
+      console.log('cant find the table:',myArgs[1])
+      return
+    }
     var alreadyRelation = false
-   var value = myArgs[4]
+    var value = myArgs[4]
     switch(myArgs[4]){
       case 'true':
       value = true
@@ -86,21 +91,45 @@ const executor = async(myArgs) =>{
       value = false
       break
     }
- 
-    
     if(!verifyCommand(myArgs)){
+      console.log("invalid command")
+      return
+    }
+    
+    
+    
+    
+    
+    if(myArgs[3] == 'remove'){
+      for(var item in databases[finder]['config']){
+        
+        
+      }
       return
     }
     if(databases[finder]['config']){
       for(var item in databases[finder]['config']){
         //console.log('item',databases[finder]['config'][item])
+        console.log(myArgs[1],myArgs[2],myArgs[3],myArgs[4]) 
         databases[finder]['config'][item].map((m,index)=>{
+          let alreadyExistKey = false
+          
+          console.log('item',m)
+          
           let key = Object.keys(m)[0]
-          console.log('key',key,myArgs[3])
+        
+      
+        
+         if(!databases[finder]['config'][myArgs[2]]){
+           console.log('true',myArgs[2])
+          databases[finder]['config'][myArgs[2]] = [{[myArgs[3]]:value}]
+          console.log(  databases[finder]['config'][myArgs[2]])
+         }
+          // databases[finder]['config'][myArgs[2]].push({...databases[finder]['config'][myArgs[2]],[myArgs[2]]:[{[myArgs[3]]:value}]})
+          // console.log( databases[finder]['config'])
           if(key != myArgs[3] && m[myArgs[3]] != value){
             let canProcess =  databases[finder]['config'][myArgs[2]].map((t,index)=>{
               if(Object.keys(t)[0] == myArgs[3]){
-                console.log('cant insert',myArgs[3])
                 return false
               }else{
                 return true
@@ -122,7 +151,7 @@ const executor = async(myArgs) =>{
             })
             // console.log('teste item',teste)
             //console.log({index,[myArgs[3]]:value})
-            databases[finder]['config'][myArgs[2]][index] ={[myArgs[3]]:value}
+            databases[finder]['config'][myArgs[2]][index] = {[myArgs[3]]:value}
             console.log(JSON.stringify( databases[finder]['config'][myArgs[2]][index]))
             alreadyRelation = false
           }
