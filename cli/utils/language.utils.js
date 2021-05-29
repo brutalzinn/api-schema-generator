@@ -32,6 +32,15 @@ const setDefaultLanguage = async () =>{
     }
     return 'en'
 }
+const startLanguage = async () =>{
+    let languageSelected
+    configDatabase.map((item)=>{
+        if(item.config && item.config.language){
+            languageSelected = item.config.language
+        }
+    })
+    return languageSelected
+}
 const getLanguage = async (database,id = null)=>{
     const databaseConfigUtils = require('../../api/utils/database.assist.utils')
     let configDatabase = await databaseConfigUtils.openFile('config')
@@ -41,18 +50,17 @@ const getLanguage = async (database,id = null)=>{
             languageSelected = item.config.language
         }
     })
-   let language = await openFile(languageSelected)
-  for(var item in language){
-      console.log('item',item)
-      if(id){
-        let idRegex = new RegExp('%id',"g");
-        language[item] = language[item].replace(idRegex,id)
-      }
-    let re = new RegExp('%database',"g");
-    language[item] = language[item].replace(re,database)
-  }
+    let language = await openFile(languageSelected)
+    for(var item in language){
+        if(id){
+            let idRegex = new RegExp('%id',"g");
+            language[item] = language[item].replace(idRegex,id)
+        }
+        let re = new RegExp('%database',"g");
+        language[item] = language[item].replace(re,database)
+    }
     console.log('language opened',languageSelected,language)
-return language
+    return language
 }
 
 module.exports = {
