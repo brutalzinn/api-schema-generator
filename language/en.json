@@ -4,5 +4,6 @@
     "NOT_FOUND":"%id can't be found on %database collection",
     "SUCESS_DELETE":"%id successful deleted %database collection",
     "EMPTY":"Collection %database is empty",
-    "SUCESS_UPDATE":"%id successful updated %database collection"
+    "SUCESS_UPDATE":"%id successful updated %database collection",
+    "START":"Started at"
 }
