@@ -195,6 +195,29 @@ const executor = async(myArgs) =>{
 
 
     case 'about':
+    if(!myArgs[1]){
+
+      for(var command in commandUtils){
+        if(!commandUtils[command]['description'][command]){
+          console.log('---------')
+          console.log(command)
+          console.log(commandUtils[command]['description'])
+          console.log(commandUtils[command]['usage'])
+          console.log('---------')
+        }else{
+          console.log('---------')
+          console.log(command)
+
+          for(var subDescription in commandUtils[command]['description']){
+            console.log(commandUtils[command]['description'][subDescription])
+            console.log(commandUtils[command]['usage'][subDescription])
+          }
+          console.log('---------')
+        }
+
+      }
+
+    }
     if(myArgs.length > 3){
       console.log('no mode')
       return
