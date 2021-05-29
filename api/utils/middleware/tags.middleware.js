@@ -3,9 +3,9 @@ const {tagsGenerator} = require('../../utils/tags.generator')
 const {openFile,createModel,Insert,Update,Delete,updateOverwrite} = require('../../utils/database.utils')
 const databaseConfig = require('../../utils/database.assist.utils')
 function tagsHandler(database) {
-    
+
     return async (req, res, next) =>{
-        
+
         console.log('end')
         let customDatabase = await databaseConfig.openCustomDatabase(database)
         //console.log('custom db',customDatabase)
@@ -14,16 +14,16 @@ function tagsHandler(database) {
         const { body } = req;
         let generateAll = false
         let generatesimple = false
-  
+
 
         if(customDatabase['config'] &&  customDatabase['config']['tag']){
-            customDatabase['config']['tag'].map((item,index)=>{           
+            customDatabase['config']['tag'].map((item,index)=>{
                 if(customDatabase['config']['tag'][index]['generateall'] != undefined){
                     generateAll = (customDatabase['config']['tag'][index]['generateall'] === true)
-                }   
+                }
                 if(customDatabase['config']['tag'][index]['generatesimple'] != undefined){
                     generatesimple = (customDatabase['config']['tag'][index]['generatesimple'] === true)
-                }   
+                }
             })
         }else{
             return next()
@@ -39,9 +39,9 @@ function tagsHandler(database) {
             }
         }
         const relationAsync = async (body,table,key) =>{
-            
+
             let myRelation = await openFile(table)
-            
+
             if(Array.isArray(body[key])){
                 await Promise.all(body[key].map(async(keyArray)=>{
                     let result = myRelation.find((f)=>f.id == keyArray)
@@ -73,26 +73,26 @@ function tagsHandler(database) {
                 }
                 if(req.body[key]){
                     let customDatabaseRelationSingle = await databaseConfig.openCustomDatabase(table)
-                    if(customDatabaseRelationSingle['tag']){                      
+                    if(customDatabaseRelationSingle['tag']){
                         tagsGenerator(result,customDatabaseRelationSingle['tag']).map((t)=>{
                             arrayRelationTag.push(t)
                         })
                     }
                 }
             }
-            
-            
+
+
         }
 
         const relationCreator = async ()=>{
-            
-            
+
+
             if(Array.isArray(customDatabase['tag'])){
-                
-                
+
+
                 if(!customDatabase['relation']){
                     console.log('ignorando relation of table',database)
-                    return 
+                    return
                 }
                 await Promise.all(customDatabase['relation'].map(async (relation)=>{
                     if(!body[relation.key]){
@@ -103,44 +103,44 @@ function tagsHandler(database) {
                                 return
                             }else{
                                 console.log('vindo finder',finder)
-                                
+
                                 await relationAsync(finder,relation.table,relation.key)
                             }
                         }
-                        
+
                         //return next()
                     }
                     if(body[relation.key]){
                         await relationAsync(body,relation.table,relation.key)
                     }
-                    
-                    
+
+
                 }))
             }
-            
-            
+
+
         }
         if(generateAll){
             await relationCreator()
         }else{
             console.log('cant use generateAll for all relations of this table.')
         }
-  
-        
+
+
             console.log('gewrando tag')
             let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
             var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
-            
+
             let tags = [...new Set(tagsReceived)];
-            
+
             req.body = { ...req.body,tags}
             console.log('req.body',req.body)
-        
+
         return next()
     }
     // if(!body['categoria']){
     //     req.body = { ...body,tags:[...tagsGenerator(body)] }
-    
+
     //     return next()
     // }
     // let categoriaTag = []
@@ -154,18 +154,18 @@ function tagsHandler(database) {
     //         })
     //     })
     // }else{
-    
+
     //     let findedCategory = myCategory.find((f)=>f.id == body['categoria'])
     //     tagsGenerator(findedCategory).map((c)=>{
     //         categoriaTag.push(c)
     //     })
-    
+
     // }
     // req.body = { ...body,tags:[...tagsGenerator(body),...categoriaTag] }
-    
-    
+
+
     // next()
-    
+
 }
 module.exports = {
     tagsHandler

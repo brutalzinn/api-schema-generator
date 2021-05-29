@@ -6,7 +6,7 @@ const {saveFile,openFile} = require('../../../utils/database.assist.utils')
 module.exports = async (router) => {
     const databases = await openFile('config')
     return await Promise.all(databases.map(async(data)=>{
-        
+
         router.route(`/${data.database}/search`).get(
             search(data.database)
             )
@@ -15,10 +15,9 @@ module.exports = async (router) => {
                 router.route(`/${data.database}/extra`).get(
                     customFinder(data.database)
                     )
-            }
-   
-                
-                
+                }
+
+
+
             }))
         }
-        

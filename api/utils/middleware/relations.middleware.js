@@ -2,9 +2,9 @@ const databaseConfig = require('../../utils/database.assist.utils')
 const {openFile} = require('../../utils/database.utils')
 
 function relationHandler(database) {
-    
+
     return async (req, res, next) =>{
-        
+
         let customDatabase = await databaseConfig.openCustomDatabase(database)
         if(customDatabase['relation']){
             console.log('tem relacao')
@@ -18,7 +18,7 @@ function relationHandler(database) {
                                 console.log('#####deleted',key)
                                 req.body[item.key].splice(index)
                             }
-                            
+
                         })
                         if(req.body[item.key].length == 0){
                             delete req.body[item.key]
@@ -30,8 +30,8 @@ function relationHandler(database) {
                             req.body = {...req.body}
                         }
                     }
-                    
-                    
+
+
                 }
             }))
         }

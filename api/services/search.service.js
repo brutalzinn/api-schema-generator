@@ -3,11 +3,9 @@ const databaseUtil = require('../utils/database.assist.utils')
 
 const getDatabaseInfo = async (database,params) => {
     var searchParams = params.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');
-    console.log(searchParams)
     let id = params.query.id
     let databaseConfig = await databaseUtil.openCustomDatabase(database)
     let relations = databaseConfig['relation']
-    var response = []
     if(!relations)
     {
         return
@@ -104,12 +102,15 @@ const searchFinder = async(database,req) => {
 
     var searchParams = req.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().split(' ');
     //let teste = []
+    var relationsParams = req.query.relations.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');
+    let databaseConfig = await databaseUtil.openCustomDatabase(database)
+    let relations = databaseConfig['relation']
 
+    console.log(searchParams,relations)
     var regex = searchParams.map((item)=>{
         //teste.push({$regex:`^${item}`, $options : 'i'})
         return new RegExp( '^'+ item,'i' );
     })
-    console.log('####',searchParams)
     //return estabelecimento.find({ tags: { $all: searchParams } }, function (e, docs) {
     let response = []
     const json = await openFile(database)
@@ -129,6 +130,41 @@ const searchFinder = async(database,req) => {
 
         })
     })
+
+    await Promise.all(response.map(async (item,index)=>{
+        await Promise.all(relations.map(async (relat)=>{
+            if(relationsParams.includes(relat.table)){
+                if(item[relat.key]){
+                    if(Array.isArray(item[relat.key])){
+                        let relationTable = await openFile(relat.table)
+                        if(!relationTable){
+                            return
+                        }
+                        let tmpRelationArray = []
+                        item[relat.key].map((v)=>{
+                            let relationFinded = relationTable.find((f)=>f.id === v)
+                            tmpRelationArray.push(relationFinded)
+                        })
+                        response[index] = {...response[index],[relat.key]:tmpRelationArray}
+
+                    }else{
+                        let relationTable = await openFile(relat.table)
+
+                        if(!relationTable){
+                            return
+                        }
+                        let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
+                        response[index] = {...response[index],[relat.key]:relationFinded}
+
+                    }
+
+                }
+            }
+        }))
+    }))
+
+
+
     return response
     //return json.find((item)=>item.tags == regex)
 }
