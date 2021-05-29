@@ -2,21 +2,44 @@ const fs = require('fs');
 const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
 const {verifyCommand,config,language} = require('./cli/commands')
+const LangueUtils = require('./cli/utils/language.utils')
 
 const {saveFile,openFile} = require('./api/utils/database.assist.utils')
 
 const root_dir  = path.join(path.dirname(require.main.filename),'api')
 const myArgs = process.argv.slice(2);
-
+const getLanguage = async (args) =>{
+  await LangueUtils.loadLanguage()
+  return LangueUtils.getLanguage(args)
+}
 const executor = async(myArgs) =>{
   switch(myArgs[0]){
-
     case 'clear':
-    fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
+    const clearDatabase = async () =>{
+      let databasePath = path.join(root_dir,'database',myArgs[1]+'.json')
+      let languageLang = await getLanguage([myArgs[1]])
+      if (fs.existsSync(databasePath)) {
+        fs.unlinkSync(databasePath)
+        console.log(languageLang['DATABASE_CLEAR'])
+      }else{
+        console.log('error:',languageLang['DATABASE_NOT_FOUND'])
+      }
+    }
+    console.log('clear command')
+    clearDatabase()
     break
     case 'drop':
     let dropDatabase = async (database) =>{
-      fs.unlinkSync(path.join(root_dir,'database',database+'.json'))
+      let databasePath = path.join(root_dir,'database',database+'.json')
+      let languageLang = await getLanguage([database])
+      //remove database
+      if (fs.existsSync(databasePath)) {
+        fs.unlinkSync(path.join(root_dir,'database',database+'.json'))
+      }else{
+        console.log(languageLang['DATABASE_NOT_FOUND'])
+        return
+      }
+      //remove config here
       let databases = await openFile('config')
       databases.map((data,index)=>{
         if(data.database == database){
@@ -25,26 +48,37 @@ const executor = async(myArgs) =>{
         }
       })
       await saveFile('config',databases)
+      console.log(languageLang['DATABASE_DROP'])
     }
     dropDatabase(myArgs[1])
-    console.log(`database ${myArgs[1]} are sucefull dropped`)
+
     break;
     case 'create':
     let createDatabase = async (database) =>{
+      let languageLang = await getLanguage([database])
       let databases = await openFile('config')
-      databases.push({database})
+      let databaseIndex = databases.findIndex((v)=>v.database == database)
+      if(databaseIndex == -1){
+        databases.push({database})
+      }else{
+        console.log(languageLang['DATABASE_EXIST'])
+        return
+      }
       await saveFile('config',databases)
       await databaseSave.openFile(database)
-      console.log(`database ${database} are sucefull created`)
+      console.log(languageLang['DATABASE_CREATE'])
     }
+    createDatabase(myArgs[1])
+    break
     case 'language':
-   await language(myArgs)
+    await language(myArgs)
     break
     case 'remove':
     let removeDatabaseOption = async (database) =>{
       let databases = await openFile('config')
+      let languageLang = await getLanguage([database])
       if(!verifyCommand(myArgs)){
-        console.log("invalid command")
+        console.log(languageLang['INVALID_COMMAND'])
         return
       }
       console.log(myArgs[1],myArgs[2])
@@ -62,8 +96,6 @@ const executor = async(myArgs) =>{
     removeDatabaseOption(myArgs[1])
     break;
     case 'tag':
-    console.log('creating tag to database',myArgs[1],'type',myArgs[2])
-
     let createTag = async (database) =>{
       let databases = await openFile('config')
       let finder = databases.findIndex((item)=>item.database === myArgs[1])
@@ -81,15 +113,12 @@ const executor = async(myArgs) =>{
             value = false
             break
           }
-          console.log('#####',myArgs[2])
-
           if(!databases[finder]['config']){
             databases[finder]['config'] = {}
           }
           databases[finder]['config']['tag'] = [{[myArgs[2]]:value}]
 
         }
-
         if(!databases[finder]['config']){
           databases[finder]['config'] = {}
         }
@@ -117,7 +146,7 @@ const executor = async(myArgs) =>{
 
 
       await saveFile('config',databases)
-      console.log(`database ${database} are sucefull created`)
+      console.log(`collection ${database} tag are sucefull created`)
     }
     createTag(myArgs[1])
     break;

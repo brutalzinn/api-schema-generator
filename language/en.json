@@ -1,9 +1,19 @@
 {
-    "ERROR_UNEXPECTED":"A unexpected error on %database collection",
-    "SUCESS_POST":"successful registred %database collection",
-    "NOT_FOUND":"%id can't be found on %database collection",
-    "SUCESS_DELETE":"%id successful deleted %database collection",
-    "EMPTY":"Collection %database is empty",
-    "SUCESS_UPDATE":"%id successful updated %database collection",
-    "START":"Started at"
+    "ERROR_UNEXPECTED":"A unexpected error on %0 collection",
+    "SUCESS_POST":"successful registred %0 collection",
+    "NOT_FOUND":"%0 can't be found on %1 collection",
+    "SUCESS_DELETE":"%0 successful deleted %1 collection",
+    "EMPTY":"Collection %0 is empty",
+    "SUCESS_UPDATE":"%0 successful updated %1 collection",
+    "START":"Started at",
+    "DATABASE_DROP":"collection %0 are sucessfull dropped",
+    "DATABASE_CREATE":"collection %0 are sucessfull created",
+    "DATABASE_EXIST":"collection %0 already exists.",
+
+    "INVALID_COMMAND":"Command invalid.",
+    "KEY_CONFIG_REMOVE":"Key %0 are sucessfull removed of config",
+    "DATABASE_CLEAR":"Collection %0 are sucessfull cleared.",
+    "DATABASE_NOT_FOUND":"Collection %0 not found."
+
+
 }

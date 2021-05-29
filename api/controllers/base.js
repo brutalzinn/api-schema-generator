@@ -7,7 +7,7 @@ async function createPost(database){
   return async (req,res,next) => {
     const { body } = req;
   const response = await create(database,body)
-  let language = await getLanguage(database)
+  let language = await getLanguage([id,database])
   console.log(language)
   if(!response){
     return res.status(200).send({
@@ -24,7 +24,7 @@ async function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
     const response = await del(database,id)
-    let language = await getLanguage(database,id)
+    let language = await getLanguage([id,database])
     if(!response){
       return res.status(200).send({
          mensagem: language['NOT_FOUND']
@@ -42,7 +42,7 @@ async function getPost(database){
   return async (req,res,next) => {
     const {id} = req.params
     const response = await get(database,id)
-    let language = await getLanguage(database,id)
+    let language = await getLanguage([id,database])
     if(!response){
      return res.status(200).send({
         mensagem: language['NOT_FOUND']
@@ -55,7 +55,7 @@ async function lista(database){
 
   return async (req,res,next) => {
     const response = await list(database)
-    let language = await getLanguage(database)
+    let language = await getLanguage([database])
     if(!response){
      return res.status(200).send({
         mensagem: language['EMPTY']
@@ -71,7 +71,7 @@ async function editPost(database){
     const {id} = body
 
       const response = await edit(database,body)
-      let language = await getLanguage(database,id)
+      let language = await getLanguage([id,database])
 
       if(!response){
        return res.status(200).send({

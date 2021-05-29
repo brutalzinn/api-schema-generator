@@ -4,8 +4,6 @@ const {config} = require('./commands/config')
 const {language} = require('./commands/language')
 
 const checkCommand = (command,args) =>{
-    console.log('teste',command)
-
     command = command.toLocaleLowerCase()
     args = args.toLocaleLowerCase()
     if(Array.isArray(handler.configHandler[command])){
@@ -18,10 +16,10 @@ const verifyCommand = (command) => {
         case 'config':
         switch(command[2]){
             case 'search':
-                if(!command[4]){
-                    console.log(`this command requires a ${command[3]} with a value pair.`)
-                    return false
-                }
+            if(!command[4]){
+                console.log(`this command requires a ${command[3]} with a value pair.`)
+                return false
+            }
             return checkCommand(command[2],command[3])
         }
         break

@@ -2,7 +2,7 @@ const fs = require('fs');
 const uuid = require('uuid').v4;
 const path = require('path');
 const root_dir = path.join(path.dirname(require.main.filename),'language')
-
+var Language = {}
 const openFile = async (arquivo) =>{
     let filePath = path.join(root_dir,arquivo+'.json')
     if (fs.existsSync(filePath)) {
@@ -28,20 +28,12 @@ const setDefaultLanguage = async () =>{
     let configDatabase = await databaseConfigUtils.openFile('config')
     let configIndex = configDatabase.findIndex((v)=>v.config)
     if(configIndex == -1){
-        databases.push({config:{language:'en'}})
+        configDatabase.push({config:{language:'en'}})
+        await databaseConfigUtils.saveFile('config',configDatabase)
     }
-    return 'en'
+    //
 }
-const startLanguage = async () =>{
-    let languageSelected
-    configDatabase.map((item)=>{
-        if(item.config && item.config.language){
-            languageSelected = item.config.language
-        }
-    })
-    return languageSelected
-}
-const getLanguage = async (database,id = null)=>{
+const loadLanguage = async () =>{
     const databaseConfigUtils = require('../../api/utils/database.assist.utils')
     let configDatabase = await databaseConfigUtils.openFile('config')
     let languageSelected
@@ -50,22 +42,32 @@ const getLanguage = async (database,id = null)=>{
             languageSelected = item.config.language
         }
     })
-    let language = await openFile(languageSelected)
-    for(var item in language){
-        if(id){
-            let idRegex = new RegExp('%id',"g");
-            language[item] = language[item].replace(idRegex,id)
+    Language = await openFile(languageSelected)
+}
+const getLanguage = async (args)=>{
+    const databaseConfigUtils = require('../../api/utils/database.assist.utils')
+    let configDatabase = await databaseConfigUtils.openFile('config')
+    console.log('teste')
+    let languageSelected
+    configDatabase.map((item)=>{
+        if(item.config && item.config.language){
+            languageSelected = item.config.language
         }
-        let re = new RegExp('%database',"g");
-        language[item] = language[item].replace(re,database)
+    })
+    //let language = await openFile(languageSelected)
+    for(var item in Language){
+        args.map((arg,index)=>{
+            let idRegex = new RegExp(`%${index}`,"g");
+            Language[item] = Language[item].replace(idRegex,arg)
+        })
     }
-    console.log('language opened',languageSelected,language)
-    return language
+    return Language
 }
 
 module.exports = {
     openFile,
     saveFile,
+    loadLanguage,
     getLanguage,
     setDefaultLanguage
 
