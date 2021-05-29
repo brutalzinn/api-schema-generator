@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
-const {verifyCommand,config,language,commandUtils} = require('./cli/commands')
+const {verifyCommand,config,language} = require('./cli/commands')
 const LangueUtils = require('./cli/utils/language.utils')
 
 const {saveFile,openFile} = require('./api/utils/database.assist.utils')
@@ -12,11 +12,15 @@ const getLanguage = async (args) =>{
   await LangueUtils.loadLanguage()
   return LangueUtils.getLanguage(args)
 }
+
 const executor = async(myArgs) =>{
+  let languageUtil = await getLanguage()
+  let  commandUtils =  languageUtil['command']
   if(!commandUtils[myArgs[0]]){
     console.log('esse comando não existe')
     return
   }
+
   switch(myArgs[0]){
     case 'clear':
     const clearDatabase = async () =>{
@@ -225,9 +229,13 @@ const executor = async(myArgs) =>{
         }
       }
     }
-    console.log(`Showing info about command: ${myArgs[1]}`)
-    console.log(`Description: ${description()}`)
-    console.log(`Sintax: ${usage()}`)
+    if(!commandUtils[myArgs[1]]){
+      console.log('Command not found')
+      return
+    }
+    console.log(`${languageUtil['DATABASE_ABOUT_SHOW_INFO']}: ${myArgs[1]}`)
+    console.log(`${languageUtil['DATABASE_ABOUT_SHOW_DESCRIPTION']}: ${description()}`)
+    console.log(`${languageUtil['DATABASE_ABOUT_SHOW_SINTAX']}: ${usage()}`)
     break;
 
   }}

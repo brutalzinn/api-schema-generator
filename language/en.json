@@ -21,6 +21,10 @@
     "DATABASE_CREATE_RELATION_ALERT":"Trying to create relation in %0 with %1 using key %2",
     "DATABASE_RELATION_ALREADY":"Relation already exists",
     "DATABASE_CREATE_RELATION":"Created relation in %0 with %1 using key %2",
+    "DATABASE_ABOUT_SHOW_INFO":"Showing info about command",
+    "DATABASE_ABOUT_SHOW_DESCRIPTION":"Description",
+    "DATABASE_ABOUT_SHOW_SINTAX":"Sintax",
+
     "command":{
         "clear":{
             "description":"Clear a collection",

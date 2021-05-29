@@ -1,6 +1,5 @@
 
 const handler = require('./handler')
-const commandUtils= require('./utils/commands.utils')
 
 const {config} = require('./commands/config')
 const {language} = require('./commands/language')
@@ -38,7 +37,6 @@ const verifyCommand = (command) => {
 
 module.exports = {
     verifyCommand,
-    commandUtils,
     config,
     language
 }

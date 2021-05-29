@@ -44,20 +44,17 @@ const loadLanguage = async () =>{
     })
     Language = await openFile(languageSelected)
 }
-const getLanguage = async (args)=>{
-    const databaseConfigUtils = require('../../api/utils/database.assist.utils')
-    let configDatabase = await databaseConfigUtils.openFile('config')
-    let languageSelected
-    configDatabase.map((item)=>{
-        if(item.config && item.config.language){
-            languageSelected = item.config.language
-        }
-    })
+const getLanguage = (args)=>{
+    if(!args){
+        return Language
+    }
     for(var item in Language){
-        args.map((arg,index)=>{
-            let idRegex = new RegExp(`%${index}`,"g");
-            Language[item] = Language[item].replace(idRegex,arg)
-        })
+        if(item != 'command'){
+            args.map((arg,index)=>{
+                let idRegex = new RegExp(`%${index}`,"g");
+                Language[item] = Language[item].replace(idRegex,arg)
+            })
+        }
     }
     return Language
 }
