@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
-const {verifyCommand,config} = require('./cli/commands')
+const {verifyCommand,config,language} = require('./cli/commands')
 
 const {saveFile,openFile} = require('./api/utils/database.assist.utils')
 
@@ -37,7 +37,8 @@ const executor = async(myArgs) =>{
       await databaseSave.openFile(database)
       console.log(`database ${database} are sucefull created`)
     }
-    createDatabase(myArgs[1])
+    case 'language':
+   await language(myArgs)
     break
     case 'remove':
     let removeDatabaseOption = async (database) =>{
@@ -143,7 +144,7 @@ const executor = async(myArgs) =>{
         databases[finder] = {...databases[finder],relation:[{table:father,key}]}
       }
       await saveFile('config',databases)
-      if(!alreadyRelation){
+      if(alreadyRelation){
         console.log('Error: Relation already exists')
       }else{
         console.log(`Created relation in ${myArgs[1]} with ${myArgs[2]} using key ${myArgs[3]}`)

@@ -1,20 +1,21 @@
 
 const {create,list,del,edit,get,getCustom} = require('../services/base.service');
-
+const {getLanguage} = require('../../cli/utils/language.utils')
 
 async function createPost(database){
-  
+
   return async (req,res,next) => {
     const { body } = req;
   const response = await create(database,body)
-  console.log('created',response)
+  let language = await getLanguage(database)
+  console.log(language)
   if(!response){
     return res.status(200).send({
-       mensagem: `A unexpected error on ${database} collection`
+       mensagem: language['ERROR_UNEXPECTED']
      });
    }
     return res.status(200).send({
-      mensagem: `successful registred ${database} collection`
+      mensagem: language['SUCESS_POST']
     });
   }
 }
@@ -23,38 +24,41 @@ async function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
     const response = await del(database,id)
+    let language = await getLanguage(database,id)
     if(!response){
       return res.status(200).send({
-         mensagem: `${req.body.id} can't be found on ${database} collection`
+         mensagem: language['NOT_FOUND']
        });
      }
     return res.status(200).send({
-      mensagem: `${req.body.id} successful deleted ${database} collection`
+      mensagem: language['SUCESS_DELETE']
     });
-    
+
   }
 }
 
 
-async function getPost(database){ 
+async function getPost(database){
   return async (req,res,next) => {
     const {id} = req.params
     const response = await get(database,id)
+    let language = await getLanguage(database,id)
     if(!response){
      return res.status(200).send({
-        mensagem: `${id} can't be found on ${database} collection`
+        mensagem: language['NOT_FOUND']
       });
     }
     return res.status(200).json(response)
   }
 }
 async function lista(database){
-  
+
   return async (req,res,next) => {
     const response = await list(database)
+    let language = await getLanguage(database)
     if(!response){
      return res.status(200).send({
-        mensagem: `Collection ${database} is empty`
+        mensagem: language['EMPTY']
       });
     }
     return res.status(200).json(response)
@@ -67,17 +71,18 @@ async function editPost(database){
     const {id} = body
 
       const response = await edit(database,body)
-    
+      let language = await getLanguage(database,id)
+
       if(!response){
        return res.status(200).send({
-          mensagem: `${id} can't be found on ${database} collection`
+          mensagem: language['NOT_FOUND']
         });
       }
-    
+
      return res.status(200).send({
-        mensagem: `${id} successful updated ${database} collection`
+        mensagem: language['SUCESS_UPDATE']
       });
-    
+
 
   }
 }

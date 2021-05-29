@@ -1,0 +1,8 @@
+{
+    "ERROR_UNEXPECTED":"Um erro inesperado na coleção %database",
+    "SUCESS_POST":"Registrado com sucesso na coleção %database ",
+    "NOT_FOUND":"%id não foi encontrado na coleção %database",
+    "SUCESS_DELETE":"%id Deletado com sucesso na coleção %database",
+    "EMPTY":"Coleção %database está vazia.",
+    "SUCESS_UPDATE":"%id Atualizado com sucesso na coleção %database"
+}

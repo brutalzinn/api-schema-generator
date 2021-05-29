@@ -1,0 +1,8 @@
+{
+    "ERROR_UNEXPECTED":"A unexpected error on %database collection",
+    "SUCESS_POST":"successful registred %database collection",
+    "NOT_FOUND":"%id can't be found on %database collection",
+    "SUCESS_DELETE":"%id successful deleted %database collection",
+    "EMPTY":"Collection %database is empty",
+    "SUCESS_UPDATE":"%id successful updated %database collection"
+}
