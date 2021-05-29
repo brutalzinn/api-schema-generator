@@ -1,1 +1,1 @@
-[{"database":"post","relation":[{"table":"teste","key":"teste"},{"table":"categoria","key":"cat"}],"tag":["titulo","interesse"],"config":{"tag":[{"generateall":true}]}},{"database":"teste"},{"database":"categoria","config":{"tag":[{"generatesimple":false}]}}]
+[{"database":"post","relation":[{"table":"categoria","key":"categoria"},{"table":"teste","key":"testando"}]},{"database":"categoria"},{"database":"teste"}]

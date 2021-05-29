@@ -10,7 +10,7 @@ const myArgs = process.argv.slice(2);
 
 const executor = async(myArgs) =>{
   switch(myArgs[0]){
-    
+
     case 'clear':
     fs.unlinkSync(path.join(root_dir,'database',myArgs[1]+'.json'))
     break
@@ -37,6 +37,8 @@ const executor = async(myArgs) =>{
       await databaseSave.openFile(database)
       console.log(`database ${database} are sucefull created`)
     }
+    createDatabase(myArgs[1])
+    break
     case 'remove':
     let removeDatabaseOption = async (database) =>{
       let databases = await openFile('config')
@@ -52,7 +54,7 @@ const executor = async(myArgs) =>{
           //return
         }
       }
-      
+
       await saveFile('config',databases)
       console.log(`Key ${myArgs[2]} are sucefull removed of config`)
     }
@@ -60,7 +62,7 @@ const executor = async(myArgs) =>{
     break;
     case 'tag':
     console.log('creating tag to database',myArgs[1],'type',myArgs[2])
-    
+
     let createTag = async (database) =>{
       let databases = await openFile('config')
       let finder = databases.findIndex((item)=>item.database === myArgs[1])
@@ -79,14 +81,14 @@ const executor = async(myArgs) =>{
             break
           }
           console.log('#####',myArgs[2])
-          
+
           if(!databases[finder]['config']){
             databases[finder]['config'] = {}
           }
           databases[finder]['config']['tag'] = [{[myArgs[2]]:value}]
-          
+
         }
-        
+
         if(!databases[finder]['config']){
           databases[finder]['config'] = {}
         }
@@ -109,10 +111,10 @@ const executor = async(myArgs) =>{
           delete  databases[finder]['config']
         }
       }
-      
-      
-      
-      
+
+
+
+
       await saveFile('config',databases)
       console.log(`database ${database} are sucefull created`)
     }
@@ -145,14 +147,14 @@ const executor = async(myArgs) =>{
         console.log('Error: Relation already exists')
       }else{
         console.log(`Created relation in ${myArgs[1]} with ${myArgs[2]} using key ${myArgs[3]}`)
-        
+
       }
     }
     createRelation(myArgs[1],myArgs[2],myArgs[3])
     //createDatabase(myArgs[1])
     break;
-    
-    
+
+
     case 'about':
     var messagem = 'Olá!!! bem-vindo à selva, bootcampers da noite. \n Essa é uma pequena api que armazena dados em um documento json. \n Parecido com o MongoDB!'+
     '\n Sinta-se livre para alterar, fazer pedidos de merge e construir seu projeto super maneiro com essa api'+
@@ -166,7 +168,7 @@ const executor = async(myArgs) =>{
       console.log(`The health of ${myArgs[1]} has 100% OK`)
     }
     break;
-    
+
   }}
-  
+
   executor(myArgs)
