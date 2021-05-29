@@ -76,7 +76,7 @@ const executor = async(myArgs) =>{
     case 'remove':
     let removeDatabaseOption = async (database) =>{
       let databases = await openFile('config')
-      let languageLang = await getLanguage([database])
+      let languageLang = await getLanguage([myArgs[2]])
       if(!verifyCommand(myArgs)){
         console.log(languageLang['INVALID_COMMAND'])
         return
@@ -91,14 +91,15 @@ const executor = async(myArgs) =>{
       }
 
       await saveFile('config',databases)
-      console.log(`Key ${myArgs[2]} are sucefull removed of config`)
+      console.log(languageLang['KEY_CONFIG_REMOVE'])
     }
     removeDatabaseOption(myArgs[1])
     break;
     case 'tag':
     let createTag = async (database) =>{
       let databases = await openFile('config')
-      let finder = databases.findIndex((item)=>item.database === myArgs[1])
+      let finder = databases.findIndex((item)=>item.database === database)
+      let languageLang = await getLanguage([database])
       var myTags = []
       var alreadyTag = false
       let existedTags = []
@@ -124,6 +125,9 @@ const executor = async(myArgs) =>{
         }
         databases[finder]['config']['tag'] = [{[myArgs[2]]:true}]
       }
+      if(!databases[finder]['config']){
+        databases[finder]['config'] = {}
+      }
       for(var i = 3;i < myArgs.length; i++){
         myTags.push(myArgs[i])
       }
@@ -141,12 +145,8 @@ const executor = async(myArgs) =>{
           delete  databases[finder]['config']
         }
       }
-
-
-
-
       await saveFile('config',databases)
-      console.log(`collection ${database} tag are sucefull created`)
+      console.log(languageLang['DATABASE_CREATE_TAG'])
     }
     createTag(myArgs[1])
     break;
@@ -154,7 +154,8 @@ const executor = async(myArgs) =>{
     await config(myArgs)
     break;
     case 'relation':
-    console.log(`Creating relation in ${myArgs[1]} with ${myArgs[2]} using key ${myArgs[3]}`)
+    let languageLang = await getLanguage([myArgs[1],myArgs[2],myArgs[3]])
+    console.log(languageLang['DATABASE_CREATE_RELATION_ALERT'])
     let createRelation = async (child,father,key) =>{
       let databases = await openFile('config')
       var finder = databases.findIndex((item)=>item.database === child)
@@ -164,24 +165,24 @@ const executor = async(myArgs) =>{
           if(!item.table.includes(father)){
             databases[finder]['relation'].push({table:father,key})
             databases[finder] = {...databases[finder]}
-            alreadyRelation =  true
+            alreadyRelation =  false
           }else{
-            alreadyRelation = false
+            alreadyRelation = true
           }
         })
       }else{
         databases[finder] = {...databases[finder],relation:[{table:father,key}]}
       }
+      console.log(alreadyRelation)
+
       await saveFile('config',databases)
       if(alreadyRelation){
-        console.log('Error: Relation already exists')
+        console.log(languageLang['DATABASE_RELATION_ALREADY'])
       }else{
-        console.log(`Created relation in ${myArgs[1]} with ${myArgs[2]} using key ${myArgs[3]}`)
-
+        console.log(languageLang['DATABASE_CREATE_RELATION'])
       }
     }
     createRelation(myArgs[1],myArgs[2],myArgs[3])
-    //createDatabase(myArgs[1])
     break;
 
 

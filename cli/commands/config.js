@@ -1,15 +1,24 @@
 const databaseSave = require('../../api/utils/database.utils')
 const {saveFile,openFile} = require('../../api/utils/database.assist.utils')
+
+const LangueUtils = require('../utils/language.utils')
+
+const getLanguage = async (args) =>{
+    await LangueUtils.loadLanguage()
+    return LangueUtils.getLanguage(args)
+}
 const config = async (myArgs) =>{
     const {verifyCommand} = require('../commands')
-    
+
     let databases = await openFile('config')
     let finder = databases.findIndex((item)=>item.database === myArgs[1])
+    let languageLang = await getLanguage([myArgs[1]])
+    let langueFinish = await getLanguage([myArgs[3],myArgs[1]])
     if(finder === -1){
-        console.log('cant find the table:',myArgs[1])
+        console.log(languageLang['DATABASE_NOT_FOUND'])
         return
     }
-    
+
     var alreadyRelation = false
     var value = myArgs[4]
     switch(myArgs[4]){
@@ -20,18 +29,14 @@ const config = async (myArgs) =>{
         value = false
         break
     }
+    let deleteKey = await getLanguage([myArgs[3]])
+
     if(myArgs[2] == 'remove'){
-        console.log('trying to remove..',myArgs[3])
-        if(databases[finder]['config'] && databases[finder]['config'][myArgs[3]] && databases[finder]['config'][myArgs[3]].length == 0){
-            delete databases[finder]['config'][myArgs[3]]
-        }
-        if(databases[finder]['config'] && Object.keys(databases[finder]['config']).length == 0){
-            delete databases[finder]['config']
-        }
+
         for(var item in databases[finder]['config']){
             if(item == myArgs[3]){
                 if(myArgs[4] == undefined){
-                    console.log('deleting all key',myArgs[3])
+                    console.log(deleteKey['DATABASE_CONFIG_DELETE_ALL'])
                     delete databases[finder]['config'][myArgs[3]]
                 }else{
                     databases[finder]['config'][myArgs[3]].map((item,index)=>{
@@ -40,18 +45,23 @@ const config = async (myArgs) =>{
                         }
                     })
                 }
-                console.log('testess')
             }
         }
-    }else{
-        console.log(myArgs[1],myArgs[2],myArgs[3],myArgs[4]) 
+        console.log(langueFinish['DATABASE_DELETE_CONFIG'])
 
+        if(databases[finder]['config'] && databases[finder]['config'][myArgs[3]] && databases[finder]['config'][myArgs[3]].length == 0){
+            delete databases[finder]['config'][myArgs[3]]
+        }
+        if(databases[finder]['config'] && Object.keys(databases[finder]['config']).length == 0){
+            delete databases[finder]['config']
+        }
+    }else{
         if(!myArgs[4]){
-            console.log('none value pair provided')
+            console.log(languageLang['DATABASE_NOT_FOUND_KEY'])
             return
         }
         if(!verifyCommand(myArgs)){
-            console.log(`${myArgs[2]} is a invalid command`)
+            console.log(languageLang['INVALID_COMMAND'])
             return
         }
         if(databases[finder]['config']){
@@ -68,14 +78,13 @@ const config = async (myArgs) =>{
                             }else{
                                 return true
                             }
-                        }) 
+                        })
                         if(canProcess.includes(false)){
                             return
                         }
                         databases[finder]['config'][myArgs[2]].push({[myArgs[3]]:value})
                         alreadyRelation =  true
                     }else if(key == myArgs[3] && m[myArgs[3]] != value){
-                        console.log('atualizando')
                         let index
                         databases[finder]['config'][myArgs[2]].find(function(item, i){
                             if(Object.keys(item) == myArgs[3]){
@@ -84,17 +93,22 @@ const config = async (myArgs) =>{
                             }
                         })
                         databases[finder]['config'][myArgs[2]][index] = {[myArgs[3]]:value}
-                        console.log(JSON.stringify( databases[finder]['config'][myArgs[2]][index]))
                         alreadyRelation = false
                     }
                 })
             }
         }else{
-            databases[finder]['config']= {[myArgs[2]]:[{[myArgs[3]]:value}]}        
+            databases[finder]['config']= {[myArgs[2]]:[{[myArgs[3]]:value}]}
         }
+        console.log(langueFinish['DATABASE_CREATE_CONFIG'])
+
     }
+
     await saveFile('config',databases)
-    
+
+
+
+
 }
 
 

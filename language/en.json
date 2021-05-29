@@ -1,19 +1,33 @@
 {
     "ERROR_UNEXPECTED":"A unexpected error on %0 collection",
-    "SUCESS_POST":"successful registred %0 collection",
+    "SUCESS_POST":"Successful registred %0 collection",
     "NOT_FOUND":"%0 can't be found on %1 collection",
     "SUCESS_DELETE":"%0 successful deleted %1 collection",
     "EMPTY":"Collection %0 is empty",
     "SUCESS_UPDATE":"%0 successful updated %1 collection",
     "START":"Started at",
-    "DATABASE_DROP":"collection %0 are sucessfull dropped",
-    "DATABASE_CREATE":"collection %0 are sucessfull created",
-    "DATABASE_EXIST":"collection %0 already exists.",
-
+    "DATABASE_DROP":"Collection %0 are sucessfull dropped",
+    "DATABASE_CREATE":"Collection %0 are sucessfull created",
+    "DATABASE_EXIST":"Collection %0 already exists.",
     "INVALID_COMMAND":"Command invalid.",
     "KEY_CONFIG_REMOVE":"Key %0 are sucessfull removed of config",
     "DATABASE_CLEAR":"Collection %0 are sucessfull cleared.",
-    "DATABASE_NOT_FOUND":"Collection %0 not found."
+    "DATABASE_NOT_FOUND":"Collection %0 not found.",
+    "DATABASE_CREATE_TAG":"Collection %0 tag are sucefull created",
+    "DATABASE_CONFIG_DELETE_ALL":"Deleting all key on %0",
+    "DATABASE_NOT_FOUND_KEY":"None value pair provided",
+    "DATABASE_CREATE_CONFIG":"Created config %0 for %1",
+    "DATABASE_DELETE_CONFIG":"Delete config %0 for %1",
+    "DATABASE_CREATE_RELATION_ALERT":"Trying to create relation in %0 with %1 using key %2",
+    "DATABASE_RELATION_ALREADY":"Relation already exists",
+    "DATABASE_CREATE_RELATION":"Created relation in %0 with %1 using key %2"
+
+
+
+
+
+
+
 
 
 }

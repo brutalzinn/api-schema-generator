@@ -16,18 +16,18 @@ const verifyCommand = (command) => {
         case 'config':
         switch(command[2]){
             case 'search':
-            if(!command[4]){
-                console.log(`this command requires a ${command[3]} with a value pair.`)
+            if(!command[4] || !command[3]){
                 return false
             }
             return checkCommand(command[2],command[3])
         }
         break
         case 'remove':
-        console.log('delete',command[1],command[2])
+        if(!command[2] || !command[1]){
+            return false
+        }
         return checkCommand(command[0],command[2])
         case 'tag':
-        console.log('validation of tag',command[1],command[2])
         return checkCommand(command[0],command[2])
 
     }
