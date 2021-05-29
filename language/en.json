@@ -62,14 +62,5 @@
             "description":"Show info about a command.",
             "usage":"about <command>"
         }
-
     }
-
-
-
-
-
-
-
-
 }

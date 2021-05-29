@@ -1,10 +1,66 @@
 {
-    "ERROR_UNEXPECTED":"Um erro inesperado na coleção %database",
-    "SUCESS_POST":"Registrado com sucesso na coleção %database ",
-    "NOT_FOUND":"%id não foi encontrado na coleção %database",
-    "SUCESS_DELETE":"%id Deletado com sucesso na coleção %database",
-    "EMPTY":"Coleção %database está vazia.",
-    "SUCESS_UPDATE":"%id Atualizado com sucesso na coleção %database",
-    "START":"Iniciado em"
+    "ERROR_UNEXPECTED":"Erro inesperado na coleção %0",
+    "SUCESS_POST":"Registro efetuado com sucesso na coleção %0",
+    "NOT_FOUND":"%0 Não pode ser encontrado na coleção %1",
+    "SUCESS_DELETE":"%0 Deletado com sucesso na coleção %1",
+    "EMPTY":"Coleção %0 sem dados.",
+    "SUCESS_UPDATE":"%0 Atualização efetuada com sucesso na coleção %1",
+    "START":"Iniciado em",
+    "DATABASE_DROP":"A coleção %0 foi dropada com sucesso.",
+    "DATABASE_CREATE":"A coleção %0 foi criada com sucesso.",
+    "DATABASE_EXIST":"A coleção %0 já existe.",
+    "INVALID_COMMAND":"Comando inválido.",
+    "KEY_CONFIG_REMOVE":"A chave %0 foi removida com sucesso.",
+    "DATABASE_CLEAR":"A coleção %0 foi limpa com sucesso.",
+    "DATABASE_NOT_FOUND":"A coleção %0 não foi encontrada.",
+    "DATABASE_CREATE_TAG":"tag criada com sucesso na coleção %0",
+    "DATABASE_CONFIG_DELETE_ALL":"Deletando todas as chaves em %0",
+    "DATABASE_NOT_FOUND_KEY":"Nenhum par de chave detectado.",
+    "DATABASE_CREATE_CONFIG":"Configuração %0 criada para a coleção %1",
+    "DATABASE_DELETE_CONFIG":"Configuração %0 deletada para a coleção %1",
+    "DATABASE_CREATE_RELATION_ALERT":"Tentando criar uma relação entre %0 com %1 usando a chave de relação: %2",
+    "DATABASE_RELATION_ALREADY":"Essa relação já existe",
+    "DATABASE_CREATE_RELATION":"Relação criada entre %0 com %1 usando a chave de relação: %2",
+    "DATABASE_ABOUT_SHOW_INFO":"Mostrando informação sobre o comando",
+    "DATABASE_ABOUT_SHOW_DESCRIPTION":"Descrição",
+    "DATABASE_ABOUT_SHOW_SINTAX":"Sintaxe",
 
+    "command":{
+        "clear":{
+            "description":"Limpar uma coleção",
+            "usage":"clear <coleção>"
+        },
+        "drop":{
+            "description":"Apagar uma coleção e todas as suas configurações",
+            "usage":"drop <coleção>"
+        },
+        "create":{
+            "description":"Criar uma coleção",
+            "usage":"create <coleção>"
+        },
+        "language":{
+            "description":"Mudar linguagem",
+            "usage":"language <arquivo>"
+        },
+        "remove":{
+            "description":"Remove uma relação ou uma tag de uma coleção específica",
+            "usage":"remove <coleção> <tag ou relação>"
+        },
+        "tag":{
+            "description":"Crie uma tag para uma coleção com tipo específico de geração de tag. Isso será usado para rota de pesquisa avançada.",
+            "usage":"tag <coleção> <generateall or none> <tags separed by comma>"
+        },
+        "relation":{
+            "description":"Crie uma relação entre as coleções pai e filho.",
+            "usage":"relation <pai> <filho> <chave>"
+        },
+        "config":{
+            "description":{"config":"Crie uma configuração para uma coleção com uma chave específica.","remove":"Remova a configuração de uma coleção com a chave específica."},
+            "usage":{"config":"config <coleção> <option> <chave> <value>","remove":"config <coleção> remove <chave>"}
+        },
+        "about":{
+            "description":"Mostra informações sobre um comando.",
+            "usage":"about <command>"
+        }
+    }
 }
