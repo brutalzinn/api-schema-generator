@@ -13,13 +13,13 @@ const getDatabaseInfo = async (database,params) => {
         return
     }
     let json = await openFile(database)
-    
+
     if(id){
         json = json.find((g)=>g.id === id)
     }
-    
-    
-    
+
+
+
     await Promise.all(relations.map(async (relat)=>{
         if(searchParams.includes(relat.table)){
             if(json[relat.key]){
@@ -34,23 +34,23 @@ const getDatabaseInfo = async (database,params) => {
                         tmpRelationArray.push(relationFinded)
                     })
                     json = {...json,[relat.key]:tmpRelationArray}
-                    
-                }else{  
+
+                }else{
                     let relationTable = await openFile(relat.table)
-                    
+
                     if(!relationTable){
                         return
                     }
                     let relationFinded = relationTable.find((f)=>f.id === json[relat.key])
                     json = {...json,[relat.key]:relationFinded}
-                    
+
                 }
-                
+
             }
         }
     }))
-    
-    
+
+
     if(!Array.isArray(json)){
         return await json
     }
@@ -69,25 +69,25 @@ const getDatabaseInfo = async (database,params) => {
                             tmpRelationArray.push(relationFinded)
                         })
                         json[index] = {...json[index],[relat.key]:tmpRelationArray}
-                        
-                    }else{  
+
+                    }else{
                         let relationTable = await openFile(relat.table)
-                        
+
                         if(!relationTable){
                             return
                         }
                         let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
                         json[index] = {...json[index],[relat.key]:relationFinded}
-                        
+
                     }
-                    
+
                 }
             }
         }))
     }))
-    
-    
-    
+
+
+
     return await json
     // console.log('params ', searchParams,relations)
     //     searchParams.map((item)=>{
@@ -101,13 +101,13 @@ function isArray(obj){
 }
 
 const searchFinder = async(database,req) => {
-    
+
     var searchParams = req.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().split(' ');
     //let teste = []
-    
+
     var regex = searchParams.map((item)=>{
         //teste.push({$regex:`^${item}`, $options : 'i'})
-        return new RegExp( '^'+ item,'i' ); 
+        return new RegExp( '^'+ item,'i' );
     })
     console.log('####',searchParams)
     //return estabelecimento.find({ tags: { $all: searchParams } }, function (e, docs) {
@@ -126,7 +126,7 @@ const searchFinder = async(database,req) => {
                     response.push(json[index])
                 }
             }
-            
+
         })
     })
     return response

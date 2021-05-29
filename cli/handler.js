@@ -1,5 +1,5 @@
 const configHandler ={
-    "tag":["generateall","generatesimple"],
+    "tag":["generateall","generatesimple","none"],
     "search":["enable"],
     "remove":["relation","tag"]
 }

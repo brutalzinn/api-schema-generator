@@ -51,7 +51,7 @@ function tagsHandler(database) {
                     }
                     if(body[key]){
                         let customDatabaseRelation = await databaseConfig.openCustomDatabase(table)
-                        if(customDatabase['tag']){
+                        if(customDatabaseRelation['tag']){
                             tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
                                 arrayRelationTag.push(t)
                             })
@@ -64,16 +64,17 @@ function tagsHandler(database) {
                     }
                 })
             }else{
-                let result = myRelation.find((f)=>f.id == body[key])
+                var result = myRelation.find((f)=>f.id == body[key])
                 console.log('########relation async no array',result)
                 if(!result){
+                    console.log('#####deleted')
                     delete req.body[key]
                     return
                 }
-                if(body[key]){
-                    let customDatabaseRelation = await databaseConfig.openCustomDatabase(table)
-                    if(customDatabase['tag']){
-                        tagsGenerator(result,customDatabaseRelation['tag']).map((t)=>{
+                if(req.body[key]){
+                    let customDatabaseRelationSingle = await databaseConfig.openCustomDatabase(table)
+                    if(customDatabaseRelationSingle['tag']){                      
+                        tagsGenerator(result,customDatabaseRelationSingle['tag']).map((t)=>{
                             arrayRelationTag.push(t)
                         })
                     }

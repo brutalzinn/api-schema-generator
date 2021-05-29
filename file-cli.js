@@ -67,44 +67,52 @@ const executor = async(myArgs) =>{
       var myTags = []
       var alreadyTag = false
       let existedTags = []
-      if(!verifyCommand(myArgs)){
-        console.log("invalid command")
-        return
-      }
-      if(myArgs[3] == 'true' || myArgs[3] == 'false'){
-        var value = myArgs[3]
-        switch(myArgs[3]){
+      if(myArgs[2] != 'none'){
+        if(myArgs[3] == 'true' || myArgs[3] == 'false'){
+          var value = myArgs[3]
+          switch(myArgs[3]){
             case 'true':
             value = true
             break
             case 'false':
             value = false
             break
+          }
+          console.log('#####',myArgs[2])
+          
+          if(!databases[finder]['config']){
+            databases[finder]['config'] = {}
+          }
+          databases[finder]['config']['tag'] = [{[myArgs[2]]:value}]
+          
         }
-        if(!databases[finder]['config']){
-          databases[finder]['config'] = {}
-        }
-        console.log('editing tag...',value)
-        databases[finder]['config']['tag'] = [{[myArgs[2]]:value}]
-      }else{
-        for(var i = 3;i < myArgs.length; i++){
-          myTags.push(myArgs[i])
-        }
-        if(databases[finder]['tag']){
-          existedTags = databases[finder]['tag']
-        }else{
-          existedTags = []
-        }
-        var allTags = existedTags.concat(myTags)
-        let unique = [...new Set(allTags)];
-        databases[finder] = {...databases[finder],tag:unique}
+        
         if(!databases[finder]['config']){
           databases[finder]['config'] = {}
         }
         databases[finder]['config']['tag'] = [{[myArgs[2]]:true}]
       }
+      for(var i = 3;i < myArgs.length; i++){
+        myTags.push(myArgs[i])
+      }
+      if(databases[finder]['tag']){
+        existedTags = databases[finder]['tag']
+      }else{
+        existedTags = []
+      }
+      var allTags = existedTags.concat(myTags)
+      let unique = [...new Set(allTags)];
+      databases[finder] = {...databases[finder],tag:unique}
+      if(myArgs[2] == 'none'){
+        delete databases[finder]['config']['tag']
+        if(Object.keys(databases[finder]['config']).length == 0){
+          delete  databases[finder]['config']
+        }
+      }
       
-      // }
+      
+      
+      
       await saveFile('config',databases)
       console.log(`database ${database} are sucefull created`)
     }
