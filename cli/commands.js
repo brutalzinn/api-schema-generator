@@ -17,6 +17,10 @@ const verifyCommand = (command) => {
         case 'config':
         switch(command[2]){
             case 'search':
+                if(!command[4]){
+                    console.log(`this command requires a ${command[3]} with a value pair.`)
+                    return false
+                }
             return checkCommand(command[2],command[3])
         }
         break
