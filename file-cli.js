@@ -64,33 +64,45 @@ const executor = async(myArgs) =>{
     let createTag = async (database) =>{
       let databases = await openFile('config')
       let finder = databases.findIndex((item)=>item.database === myArgs[1])
+      var myTags = []
+      var alreadyTag = false
+      let existedTags = []
       if(!verifyCommand(myArgs)){
         console.log("invalid command")
         return
       }
-      var myTags = []
-      var alreadyTag = false
-      let existedTags = []
-      for(var i = 3;i < myArgs.length; i++){
-        myTags.push(myArgs[i])
-      }
-      if(databases[finder]['tag']){
-        existedTags = databases[finder]['tag']
+      if(myArgs[3] == 'true' || myArgs[3] == 'false'){
+        var value = myArgs[3]
+        switch(myArgs[3]){
+            case 'true':
+            value = true
+            break
+            case 'false':
+            value = false
+            break
+        }
+        if(!databases[finder]['config']){
+          databases[finder]['config'] = {}
+        }
+        console.log('editing tag...',value)
+        databases[finder]['config']['tag'] = [{[myArgs[2]]:value}]
       }else{
-        existedTags = []
+        for(var i = 3;i < myArgs.length; i++){
+          myTags.push(myArgs[i])
+        }
+        if(databases[finder]['tag']){
+          existedTags = databases[finder]['tag']
+        }else{
+          existedTags = []
+        }
+        var allTags = existedTags.concat(myTags)
+        let unique = [...new Set(allTags)];
+        databases[finder] = {...databases[finder],tag:unique}
+        if(!databases[finder]['config']){
+          databases[finder]['config'] = {}
+        }
+        databases[finder]['config']['tag'] = [{[myArgs[2]]:true}]
       }
-      var allTags = existedTags.concat(myTags)
-      
-      let unique = [...new Set(allTags)];
-      
-      
-      // }else{
-      databases[finder] = {...databases[finder],tag:unique}
-      if(!databases[finder]['config']){
-        databases[finder]['config'] = {}
-      }
-      
-      databases[finder]['config']['tag'] = [myArgs[2]]
       
       // }
       await saveFile('config',databases)
@@ -99,7 +111,7 @@ const executor = async(myArgs) =>{
     createTag(myArgs[1])
     break;
     case 'config':
-     await config(myArgs)
+    await config(myArgs)
     break;
     case 'relation':
     console.log(`Creating relation in ${myArgs[1]} with ${myArgs[2]} using key ${myArgs[3]}`)
