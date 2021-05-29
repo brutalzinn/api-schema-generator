@@ -20,8 +20,46 @@
     "DATABASE_DELETE_CONFIG":"Delete config %0 for %1",
     "DATABASE_CREATE_RELATION_ALERT":"Trying to create relation in %0 with %1 using key %2",
     "DATABASE_RELATION_ALREADY":"Relation already exists",
-    "DATABASE_CREATE_RELATION":"Created relation in %0 with %1 using key %2"
+    "DATABASE_CREATE_RELATION":"Created relation in %0 with %1 using key %2",
+    "command":{
+        "clear":{
+            "description":"Clear a collection",
+            "usage":"clear <collection>"
+        },
+        "drop":{
+            "description":"drop a collection",
+            "usage":"drop <collection>"
+        },
+        "create":{
+            "description":"create a collection",
+            "usage":"create <collection>"
+        },
+        "language":{
+            "description":"Sets the language",
+            "usage":"language <filename>"
+        },
+        "remove":{
+            "description":"Remove a relation or a tag of a especify collection.",
+            "usage":"remove <collection> <tag or relation>"
+        },
+        "tag":{
+            "description":"Create a tag to a collection with especify type of tag generation. This will be used for advanced search route.",
+            "usage":"tag <database> <generateall or none> <tags separed by comma>"
+        },
+        "relation":{
+            "description":"Create a relation between father and child collections.",
+            "usage":"relation <father> <child> <key>"
+        },
+        "config":{
+            "description":{"config":"Create a config to a collection with especify key.","remove":"Remove a config of a collection with especify key."},
+            "usage":{"config":"config <database> <option> <key> <value>","remove":"config <database> remove <key>"}
+        },
+        "about":{
+            "description":"Show info about a command.",
+            "usage":"about <command>"
+        }
 
+    }
 
 
 

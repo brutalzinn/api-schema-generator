@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
-const {verifyCommand,config,language} = require('./cli/commands')
+const {verifyCommand,config,language,commandUtils} = require('./cli/commands')
 const LangueUtils = require('./cli/utils/language.utils')
 
 const {saveFile,openFile} = require('./api/utils/database.assist.utils')
@@ -13,6 +13,10 @@ const getLanguage = async (args) =>{
   return LangueUtils.getLanguage(args)
 }
 const executor = async(myArgs) =>{
+  if(!commandUtils[myArgs[0]]){
+    console.log('esse comando não existe')
+    return
+  }
   switch(myArgs[0]){
     case 'clear':
     const clearDatabase = async () =>{
@@ -187,17 +191,43 @@ const executor = async(myArgs) =>{
 
 
     case 'about':
-    var messagem = 'Olá!!! bem-vindo à selva, bootcampers da noite. \n Essa é uma pequena api que armazena dados em um documento json. \n Parecido com o MongoDB!'+
-    '\n Sinta-se livre para alterar, fazer pedidos de merge e construir seu projeto super maneiro com essa api'+
-    '\n Github: @brutalzinn Gitlab: @roberto.paes Linkedin: roberto-paes'
-    console.log('\x1b[36m%s\x1b[0m',messagem)
-    break;
-    case 'health':
-    console.log(`checking health of ${myArgs[1]}`)
-    let filePath = path.join(root_dir,myArgs[1]+'.json')
-    if (fs.existsSync(filePath)) {
-      console.log(`The health of ${myArgs[1]} has 100% OK`)
+    if(myArgs.length > 3){
+      console.log('no mode')
+      return
     }
+    const usage = () =>{
+      if(commandUtils[myArgs[1]]){
+        if(!myArgs[2]){
+          if(commandUtils[myArgs[1]]['usage'][myArgs[1]]){
+            return commandUtils[myArgs[1]]['usage'][myArgs[1]]
+          }else{
+            return commandUtils[myArgs[1]]['usage']
+          }
+        }else{
+          if(commandUtils[myArgs[1]]['usage'][myArgs[2]]){
+            return commandUtils[myArgs[1]]['usage'][myArgs[2]]
+          }
+        }
+      }
+    }
+    const description = () =>{
+      if(commandUtils[myArgs[1]]){
+        if(!myArgs[2]){
+          if(commandUtils[myArgs[1]]['description'][myArgs[1]]){
+            return commandUtils[myArgs[1]]['description'][myArgs[1]]
+          }else{
+            return commandUtils[myArgs[1]]['description']
+          }
+        }else{
+          if(commandUtils[myArgs[1]]['description'][myArgs[2]]){
+            return commandUtils[myArgs[1]]['description'][myArgs[2]]
+          }
+        }
+      }
+    }
+    console.log(`Showing info about command: ${myArgs[1]}`)
+    console.log(`Description: ${description()}`)
+    console.log(`Sintax: ${usage()}`)
     break;
 
   }}

@@ -1,1 +1,1 @@
-[{"config":{"language":"en"}},{"database":"post"}]
+[{"config":{"language":"en"}},{"database":"post","config":{"search":[{"enable":true}]}}]
