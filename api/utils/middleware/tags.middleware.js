@@ -13,7 +13,6 @@ function tagsHandler(database) {
         let toRemove = []
         const { body } = req;
         let generateAll = false
-        let generatesimple = false
 
 
         if(customDatabase['config'] &&  customDatabase['config']['tag']){
@@ -21,22 +20,7 @@ function tagsHandler(database) {
                 if(customDatabase['config']['tag'][index]['generateall'] != undefined){
                     generateAll = (customDatabase['config']['tag'][index]['generateall'] === true)
                 }
-                if(customDatabase['config']['tag'][index]['generatesimple'] != undefined){
-                    generatesimple = (customDatabase['config']['tag'][index]['generatesimple'] === true)
-                }
             })
-        }else{
-            return next()
-        }
-        console.log('não deveria executar',generateAll,generatesimple)
-
-        if(!generateAll){
-            console.log('generate all false')
-            if(!generatesimple){
-                console.log('generate simple false')
-                console.log('######testeeee')
-                return next()
-            }
         }
         const relationAsync = async (body,table,key) =>{
 
@@ -65,9 +49,7 @@ function tagsHandler(database) {
                 })
             }else{
                 var result = myRelation.find((f)=>f.id == body[key])
-                console.log('########relation async no array',result)
                 if(!result){
-                    console.log('#####deleted')
                     delete req.body[key]
                     return
                 }
@@ -91,7 +73,6 @@ function tagsHandler(database) {
 
 
                 if(!customDatabase['relation']){
-                    console.log('ignorando relation of table',database)
                     return
                 }
                 await Promise.all(customDatabase['relation'].map(async (relation)=>{
@@ -122,19 +103,17 @@ function tagsHandler(database) {
         }
         if(generateAll){
             await relationCreator()
-        }else{
-            console.log('cant use generateAll for all relations of this table.')
         }
+        let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
+        if(!customDatabaseRelation['tag']){
+        return next()
+        }
+        var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
 
+        let tags = [...new Set(tagsReceived)];
 
-            console.log('gewrando tag')
-            let customDatabaseRelation = await databaseConfig.openCustomDatabase(database)
-            var tagsReceived = arrayRelationTag.concat(tagsGenerator(req.body,customDatabaseRelation['tag']))
-
-            let tags = [...new Set(tagsReceived)];
-
-            req.body = { ...req.body,tags}
-            console.log('req.body',req.body)
+        req.body = { ...req.body,tags}
+        console.log('req.body',req.body)
 
         return next()
     }

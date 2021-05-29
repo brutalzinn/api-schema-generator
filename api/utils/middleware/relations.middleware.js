@@ -7,7 +7,6 @@ function relationHandler(database) {
 
         let customDatabase = await databaseConfig.openCustomDatabase(database)
         if(customDatabase['relation']){
-            console.log('tem relacao')
             await Promise.all(customDatabase['relation'].map(async (item)=>{
                 if(req.body[item.key]){
                     let dataRelation = await openFile(item.table)
@@ -15,7 +14,6 @@ function relationHandler(database) {
                         req.body[item.key].map((key,index)=>{
                             let tryFind = dataRelation.findIndex((t)=>t.id == key)
                             if(tryFind == -1){
-                                console.log('#####deleted',key)
                                 req.body[item.key].splice(index)
                             }
 
@@ -35,7 +33,6 @@ function relationHandler(database) {
                 }
             }))
         }
-        console.log('final',req.body)
         next()
     }
 }

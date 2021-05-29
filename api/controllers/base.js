@@ -7,7 +7,7 @@ async function createPost(database){
   return async (req,res,next) => {
     const { body } = req;
   const response = await create(database,body)
-  let language = await getLanguage([id,database])
+  let language = await getLanguage([database])
   console.log(language)
   if(!response){
     return res.status(200).send({

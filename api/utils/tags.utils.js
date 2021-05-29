@@ -21,7 +21,7 @@ const tagsCreator = (model,tags) =>{
     return tagsGenerator(model,tags)
 }
 function isArray(obj){
-    
+
     return Array.isArray(obj)
 }
 
@@ -41,27 +41,23 @@ const tagsUpdate = async (arquivo,model) =>{
     return database[tagsFinder]['tags']
 }
 const tagsSync = async (origin,destin,key,id) =>{
-    
+
     console.log('######origin',origin,'destin',destin,'key',key,'id',id)
     let databaseConfig = require('../utils/database.assist.utils')
-    
-    console.log('#######tags sycn',isEnabled())
+
     const databaseOrigin = await openFile(origin) //categoria
     const databaseDestin = await openFile(destin) //post
     let originConfig = await databaseConfig.openCustomDatabase(origin)
     let destinConfig = await databaseConfig.openCustomDatabase(destin)
     let originTag = originConfig['tag']
     let destinTag = destinConfig['tag']
-    
+
     let existedTags = []
     let father = databaseDestin.find((d)=> d.id == id)
     if(!father){
-        console.log('############não encontrei',father.id)
         return
-    }else{
-        console.log("###ecnontrei",father.id)
     }
-    
+
     if(Array.isArray(father[key])){
         await Promise.all(father[key].map( async (c)=>{
             console.log('promise executou  aqui')
@@ -75,7 +71,7 @@ const tagsSync = async (origin,destin,key,id) =>{
                     existedTags.push(t)
                 })
             }
-            
+
         }))
         if(father[key].length == 0){
             delete father[key]
@@ -84,7 +80,6 @@ const tagsSync = async (origin,destin,key,id) =>{
         let result = databaseOrigin.find((f)=>f.id == father[key])
         if(!result){
             delete father[key]
-            console.log('tentando deletar esse cara aqui',father[key])
         }else{
             tagsGenerator(result,originTag).map((t)=>{
                 existedTags.push(t)
@@ -94,21 +89,17 @@ const tagsSync = async (origin,destin,key,id) =>{
     tagsGenerator(father,destinTag).map((t)=>{
         existedTags.push(t)
     })
-    
+
     let unique = [...new Set(existedTags)];
-    
+
     return [...unique]
-   // await updateOverwrite(destin,father)
-    //  return unique
-    //return destinTags.concat(originTags)
-    //  return database[tagsFinder]['tags']
 }
 
 
 
 module.exports = {
     tagsUtil,
-    
+
     tagsUpdate,
     tagsSync,
     tagsCreator
