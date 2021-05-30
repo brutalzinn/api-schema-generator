@@ -1,7 +1,7 @@
 # api-auto-schema
 This is an small api that I developed for the bootcamp of the infnet institute. Using a json document for storage of data.
 
-why uses this api for test?
+Why uses this api for test?
 
 This api can store data using a json file. But you can create yours schema
 and the api will auto create yours routes. Easy use!
@@ -9,9 +9,9 @@ and the api will auto create yours routes. Easy use!
 
 | Command|Arguments|Action |
 | - |:-:| -:|
-| about | command(string) | show a info about a command and show all commands, if typed without arguments |
-| create | name(string) | create a collection |
-| drop| name(string) | delete a collection and its configuration|
+| about | about \<database\> | show a info about a command and show all commands, if typed without arguments |
+| create | create \<database\> | create a collection |
+| drop| drop \<database\> | delete a collection and its configuration|
 | tag| tag \<database\> \<generateall\> or \<none\> \<tags separed by comma\> |Create a tags field in json document, to advanced search|
 | relation| relation \<father\> \<child\> \<key\>| Create a relation between father and child collections|
 | language| language \<filename\>|Sets the language|
