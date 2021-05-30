@@ -1,4 +1,4 @@
-# bootcamp-small-blog-api
+# api-auto-schema
 This is an small api that I developed for the bootcamp of the infnet institute. Using a json document for storage of data.
 
 why uses this api for test?
