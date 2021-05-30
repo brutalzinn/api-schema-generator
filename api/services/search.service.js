@@ -102,7 +102,10 @@ const searchFinder = async(database,req) => {
 
     var searchParams = req.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().split(' ');
     //let teste = []
-    var relationsParams = req.query.relations.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');
+    var relationsParams
+    if(req.query.relations){
+        relationsParams = req.query.relations.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');
+    }
     let databaseConfig = await databaseUtil.openCustomDatabase(database)
     let relations = databaseConfig['relation']
 
@@ -130,7 +133,7 @@ const searchFinder = async(database,req) => {
 
         })
     })
-
+if(relationsParams && relations){
     await Promise.all(response.map(async (item,index)=>{
         await Promise.all(relations.map(async (relat)=>{
             if(relationsParams.includes(relat.table)){
@@ -163,7 +166,7 @@ const searchFinder = async(database,req) => {
         }))
     }))
 
-
+}
 
     return response
     //return json.find((item)=>item.tags == regex)
