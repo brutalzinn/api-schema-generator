@@ -24,7 +24,7 @@ async function delPost(database){
   return async (req, res, next) => {
     const {id} = req.params
     const response = await del(database,id)
-    let language = await getLanguage([id,database])
+    let language =  getLanguage([id,database])
     console.log('del',id,database)
     if(!response){
       return res.status(404).send({
