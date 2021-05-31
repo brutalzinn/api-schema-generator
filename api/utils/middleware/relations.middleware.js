@@ -1,4 +1,4 @@
-const databaseConfig = require('../../utils/database.assist.utils')
+const databaseConfig = require('../config.utils')
 const {openFile} = require('../../utils/database.utils')
 
 function relationHandler(database) {

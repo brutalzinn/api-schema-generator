@@ -1,7 +1,7 @@
 const baseController = require('../../controllers/base');
 const {tagsHandler} = require('../../utils/middleware/tags.middleware')
 const {relationHandler} = require('../../utils/middleware/relations.middleware')
-const {saveFile,openFile} = require('../../utils/database.assist.utils')
+const {saveFile,openFile} = require('../../utils/config.utils')
 
 module.exports = async (router) => {
   const databases = await openFile('config')

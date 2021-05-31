@@ -4,11 +4,12 @@ const path = require('path');
 const root_dir  = path.join(path.dirname(require.main.filename),'api','config')
 const databaseHandler = require('./database.utils')
 const tagUtils = require('./tags.utils')
+var Config = {}
 
 const openFile = async (arquivo) =>{
     let filePath = path.join(root_dir,arquivo+'.json')
     if (fs.existsSync(filePath)) {
-        
+
         const json =  fs.readFileSync(filePath);
         if(Object.keys(json).length == 0){
             console.log('não foi possivel abrir. Erro critico no banco',arquivo)
@@ -21,24 +22,17 @@ const openFile = async (arquivo) =>{
         return JSON.parse(json)
     }
 }
+const loadConfig = async () =>{
+var config =  await openFile('config')
+Config = config
+}
 const openCustomDatabase = async (database) =>{
-    let filePath = path.join(root_dir,'config.json')
-    if (fs.existsSync(filePath)) {
-        
-        const json =  fs.readFileSync(filePath);
-        if(Object.keys(json).length == 0){
-            console.log('não foi possivel abrir. Erro critico no banco',arquivo)
-            await saveFile(arquivo,[])
-        }
-        
-        let finder = JSON.parse(json).find((item)=>item.database === database)
-        
+
+
+        let finder = Config.find((item)=>item.database === database)
+
         return finder
-    }else{
-        await saveFile(arquivo,[])
-        const json =  fs.readFileSync(filePath);
-        return JSON.parse(json)
-    }
+
 }
 const createModel = (model) =>{
     return {id:uuid(),...model}
@@ -102,19 +96,19 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
         }else{
             console.log('trying delete',body)
             console.log('##########id post afetado',id)
-            
+
             await tagUtils.tagsSync(database,relationDatabase,key,id)
         }
     }))
 
     await databaseHandler.updateOverwrite(relationDatabase,toUpdate)
-    
-    
+
+
 }
 
 const createDatabase = async () =>{
-    
-    
+
+
 }
 module.exports = {
     openFile,

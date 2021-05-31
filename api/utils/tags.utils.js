@@ -43,7 +43,7 @@ const tagsUpdate = async (arquivo,model) =>{
 const tagsSync = async (origin,destin,key,id) =>{
 
     console.log('######origin',origin,'destin',destin,'key',key,'id',id)
-    let databaseConfig = require('../utils/database.assist.utils')
+    let databaseConfig = require('./config.utils')
 
     const databaseOrigin = await openFile(origin) //categoria
     const databaseDestin = await openFile(destin) //post

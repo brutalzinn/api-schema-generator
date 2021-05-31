@@ -1,7 +1,7 @@
 const tagEnabled =  Boolean(parseInt(process.env.TAGS))
 const {tagsGenerator} = require('../../utils/tags.generator')
 const {openFile,createModel,Insert,Update,Delete,updateOverwrite} = require('../../utils/database.utils')
-const databaseConfig = require('../../utils/database.assist.utils')
+const databaseConfig = require('../config.utils')
 function tagsHandler(database) {
 
     return async (req, res, next) =>{

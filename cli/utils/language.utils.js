@@ -24,7 +24,7 @@ const saveFile = async (arquivo,model) =>{
     }
 }
 const setDefaultLanguage = async () =>{
-    const databaseConfigUtils = require('../../api/utils/database.assist.utils')
+    const databaseConfigUtils = require('../../api/utils/config.utils')
     let configDatabase = await databaseConfigUtils.openFile('config')
     let configIndex = configDatabase.findIndex((v)=>v.config)
     if(configIndex == -1){
@@ -34,7 +34,7 @@ const setDefaultLanguage = async () =>{
     //
 }
 const loadLanguage = async () =>{
-    const databaseConfigUtils = require('../../api/utils/database.assist.utils')
+    const databaseConfigUtils = require('../../api/utils/config.utils')
     let configDatabase = await databaseConfigUtils.openFile('config')
     let languageSelected
     configDatabase.map((item)=>{

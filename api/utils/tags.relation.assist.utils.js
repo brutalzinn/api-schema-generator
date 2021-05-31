@@ -1,5 +1,5 @@
 const relationSync = async (database,model) => {
-    let databaseConfig = require('./database.assist.utils')
+    let databaseConfig = require('./config.utils')
 
     let relationsDatabase = await databaseConfig.openFile('config')
     await Promise.all(relationsDatabase.map(async (config)=>{
