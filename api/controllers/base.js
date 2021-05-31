@@ -25,8 +25,9 @@ async function delPost(database){
     const {id} = req.params
     const response = await del(database,id)
     let language = await getLanguage([id,database])
+    console.log('del',id,database)
     if(!response){
-      return res.status(200).send({
+      return res.status(404).send({
          mensagem: language['NOT_FOUND']
        });
      }
@@ -56,6 +57,7 @@ async function lista(database){
   return async (req,res,next) => {
     const response = await list(database)
     let language = await getLanguage([database])
+    console.log(database)
     if(!response){
      return res.status(200).send({
         mensagem: language['EMPTY']

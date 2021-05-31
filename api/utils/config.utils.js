@@ -27,6 +27,9 @@ const loadConfig = async () =>{
     var config =  await openFile('config')
     Config = config
 }
+const getConfig = async () =>{
+   return  Config
+}
 const openCustomDatabase = async (database) =>{
     if(Object.keys(Config).length == 0){
         console.log('não foi possivel abrir. Erro critico no banco',arquivo)
@@ -109,6 +112,7 @@ module.exports = {
     Delete,
     relationCreator,
     loadConfig,
+    getConfig,
     Insert,
     updateOverwrite,
     openCustomDatabase,

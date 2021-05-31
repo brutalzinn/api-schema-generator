@@ -24,10 +24,8 @@ const getCustom = async (column,value) => {
 }
 const del = async (database,id) => {
  const deleteDb = await Delete(database,id)
-  if(!deleteDb){
-    return false
-  }
   await relationSync(database,{id})
+  return deleteDb
 }
 
 const list = async (database) => {

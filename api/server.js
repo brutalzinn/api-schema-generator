@@ -15,8 +15,8 @@ const port = process.env.PORT
 app.listen(port, async () => {
     //console.log('Default language to ', setDefaultLanguage())
     await loadConfig()
-   await setDefaultLanguage()
-   await loadLanguage()
+    await setDefaultLanguage()
+    await loadLanguage()
     console.log('started at ', port)
 });
 

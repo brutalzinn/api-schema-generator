@@ -1,1 +1,1 @@
-[{"config":{"language":"pt"}},{"database":"post","tag":["titulo"]},{"database":"teste"}]
+[{"config":{"language":"en"}},{"database":"post","tag":["titulo"],"relation":[{"table":"teste","key":"teste"}]},{"database":"teste","relation":[{"table":"categoria","key":"categoria"}]},{"database":"categoria"}]
