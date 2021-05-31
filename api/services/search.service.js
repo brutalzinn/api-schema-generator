@@ -1,5 +1,5 @@
 const {openFile,createModel,Insert,Update,Delete} = require('../utils/database.utils')
-const databaseUtil = require('../utils/database.assist.utils')
+const databaseUtil = require('../utils/config.utils')
 
 const getDatabaseInfo = async (database,params) => {
     var searchParams = params.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');

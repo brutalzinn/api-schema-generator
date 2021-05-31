@@ -1,5 +1,5 @@
 const {search,customFinder} = require('../../../controllers/search');
-const {saveFile,openFile} = require('../../../utils/database.assist.utils')
+const {saveFile,openFile} = require('../../../utils/config.utils')
 
 
 

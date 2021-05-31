@@ -23,16 +23,17 @@ const openFile = async (arquivo) =>{
     }
 }
 const loadConfig = async () =>{
-var config =  await openFile('config')
-Config = config
+    console.log('loading config to..')
+    var config =  await openFile('config')
+    Config = config
 }
 const openCustomDatabase = async (database) =>{
-
-
-        let finder = Config.find((item)=>item.database === database)
-
-        return finder
-
+    if(Object.keys(Config).length == 0){
+        console.log('não foi possivel abrir. Erro critico no banco',arquivo)
+        return false
+    }
+    let finder = Config.find((item)=>item.database === database)
+    return finder
 }
 const createModel = (model) =>{
     return {id:uuid(),...model}
@@ -78,9 +79,6 @@ const saveFile = async (arquivo,model) =>{
 
 
 const relationCreator = async (body,database,relationDatabase,key) =>{
-    const config = await openFile('config')
-    const databaseConfig = config.find((dat)=>dat.database == database)
-    const relationalConfig = config.find((dat)=>dat.database == relationDatabase)
     const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
     let toUpdate = []
     await Promise.all(relationDatabaseJson.map(async (data)=>{
@@ -94,16 +92,11 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
                 }
             }))
         }else{
-            console.log('trying delete',body)
-            console.log('##########id post afetado',id)
-
             await tagUtils.tagsSync(database,relationDatabase,key,id)
         }
     }))
 
     await databaseHandler.updateOverwrite(relationDatabase,toUpdate)
-
-
 }
 
 const createDatabase = async () =>{
@@ -115,6 +108,7 @@ module.exports = {
     saveFile,
     Delete,
     relationCreator,
+    loadConfig,
     Insert,
     updateOverwrite,
     openCustomDatabase,

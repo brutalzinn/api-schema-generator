@@ -42,9 +42,7 @@ const updateOverwrite = async (arquivo,data) =>{
         }
         json[editTeste] = {...item}
     })
-    console.log('novo json',json)
     await saveFile(arquivo,json)
-    console.log('deu tudo',teste)
 }
 const Insert = async (arquivo,model) =>{
     try{

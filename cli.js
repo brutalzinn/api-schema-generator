@@ -4,7 +4,7 @@ const databaseSave = require('./api/utils/database.utils')
 const {verifyCommand,config,language} = require('./cli/commands')
 const LangueUtils = require('./cli/utils/language.utils')
 
-const {saveFile,openFile} = require('./api/utils/database.assist.utils')
+const {saveFile,openFile} = require('./api/utils//config.utils')
 
 const root_dir  = path.join(path.dirname(require.main.filename),'api')
 const myArgs = process.argv.slice(2);

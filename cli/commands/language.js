@@ -1,4 +1,4 @@
-const {saveFile,openFile} = require('../../api/utils/database.assist.utils')
+const {saveFile,openFile} = require('../../api/utils/config.utils')
 const LangueUtils = require('../utils/language.utils')
 
 const getLanguage = async (args) =>{
