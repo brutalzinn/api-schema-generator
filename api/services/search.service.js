@@ -53,34 +53,45 @@ const getDatabaseInfo = async (database,params) => {
         return await json
     }
     var global
-    const recursiveRelation = async (findedOriginal,relationsTable) =>{
 
+    const recursiveRelation = async (findedOriginal,relationsTable) =>{
+        //console.log('received',findedOriginal,relationsTable)
         await  Promise.all(relationsTable['relation'].map(async(item,index)=>{
             // let subTable = await openFile(item.table)
             // let subFinder = subTable.find((f)=>f.id === findedOriginal[item.key])
             // global = {...findedOriginal,[item.key]:[subFinder]}
             let subRelations = await databaseUtil.openCustomDatabase(item.table)
-
             if(findedOriginal[item.key]){
                 let subTableT = await openFile(item.table)
                 let finderT = subTableT.find((f)=>f.id === findedOriginal[item.key])
-                global = {...findedOriginal,[item.key]:[finderT]}
+                // global = {...findedOriginal,global}
+                global = {...global,[item.key]:[finderT]}
+
+                // console.log('after',item.key)
             }
-            console.log('global',item.key,item.table,findedOriginal)
+
+            //console.log('global',item.key,item.table,findedOriginal)
 
             if(subRelations['relation'] != undefined){
-                await recursiveRelation(global,subRelations)
+             await recursiveRelation(global[item.key][0],subRelations)
             }
 
         }))
+        return global
+        //   console.log('global',global)
     }
     const makeAllRelationTest = async (database,id) =>{
         let originalTable = await openFile(database)
         let findedOriginal = originalTable.find((f)=>f.id === id)
         let relationsTable = await databaseUtil.openCustomDatabase(database)
-        return await recursiveRelation(findedOriginal,relationsTable)
+        let resursiveRela = await recursiveRelation(findedOriginal,relationsTable)
+       // console.log('tttt',resursiveRela)
+        console.log(resursiveRela)
+     return {...findedOriginal,...resursiveRela}
 
+//return {'teste':'teste'}
     }
+    console.log(searchParams)
     await Promise.all(json.map(async (item,index)=>{
         await Promise.all(relations.map(async (relat)=>{
             if(searchParams.includes(relat.table)){
@@ -103,9 +114,10 @@ const getDatabaseInfo = async (database,params) => {
                         // if(!relationTable){
                         //     return
                         // }
-                        //let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
-                        await makeAllRelationTest(database,item.id)
-                        json[index] = {...global}
+                      // let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
+                        let teste = await makeAllRelationTest(relat.table,item[relat.key])
+                       // console.log('key',relat.key,relat.table)
+                        json[index] = {...json[index],[relat.key]:teste}
 
                     }
 
