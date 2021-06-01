@@ -56,29 +56,73 @@ const getDatabaseInfo = async (database,params) => {
 
     const recursiveRelation = async (findedOriginal,relationsTable) =>{
         //console.log('received',findedOriginal,relationsTable)
+
+
+        if(!relationsTable['relation']){
+            return
+        }
         await  Promise.all(relationsTable['relation'].map(async(item,index)=>{
+
             // let subTable = await openFile(item.table)
             // let subFinder = subTable.find((f)=>f.id === findedOriginal[item.key])
             // global = {...findedOriginal,[item.key]:[subFinder]}
-           // console.log('globo',item,index)
+            // console.log('globo',item,index)
             let subRelations = await databaseUtil.openCustomDatabase(item.table)
+            //    console.log(item.key)
+
+
             if(findedOriginal[item.key]){
                 let subTableT = await openFile(item.table)
                 let finderT = subTableT.find((f)=>f.id === findedOriginal[item.key])
                 // global = {...findedOriginal,global}
-                global = {...global,[item.key]:[finderT]}
-                console.log('global',{[item.key]:global})
-           //  console.log('teste',findedOriginal,item.table,item.key)
+                if(findedOriginal.subItem){
+                    //  console.log('tttt',subRelations['relation'])
+                    if(subRelations['relation']){
+                        await Promise.all(subRelations['relation'].map(async (v)=>{
+                            let hasRelations = await databaseUtil.openCustomDatabase(v.table)
+                            if(hasRelations){
+                                if(hasRelations['relation']){
+                                    let subT = await openFile(v.table)
+                                    let finT = subT.find((f)=>f.id === finderT[v.key])
+                                    finderT[v.key] = finT
+
+                                    Promise.all(hasRelations['relation'].map(async (subItem,index)=>{
+                                        //  console.log(index,subItem.table)
+                                        let ss = await openFile(subItem.table)
+                                        let ff = ss.find((f)=>f.id === finderT[v.key][subItem.key])
+                                        //      console.log(subItem.key,finderT)
+
+                                        finderT[v.key] = {...finderT[v.key],[subItem.key]:ff}
+                                    }))
+                                }else{
+                                    let subT = await openFile(v.table)
+                                    console.log(findedOriginal[v.key])
+                                    let finT = subT.find((f)=>f.id === finderT[v.key])
+                                    finderT[v.key] = finT
+                                }
+                            }
+                        }))
+                    }
+                    global = {...global,[findedOriginal.subItem]:{...global[findedOriginal.subItem][0],[item.key]:[finderT]}}
+
+                }else{
+                    global = {...global,[item.key]:[finderT]}
+                }
+
+                //  console.log('teste',findedOriginal,item.table,item.key)
                 // console.log('after',item.key)
             }
             //console.log('global',item.key,item.table,findedOriginal)
+            // console.log('key',item.key)
+            if(global[item.key]){
+                //let subObject = {...global[item.key][0],subItem:item.key}
+                //    let subItemRelations = await databaseUtil.openCustomDatabase(item.table)
+                //console.log(item.key,item.table,subRelations)
+                //console.log(subRelations['relation'])
 
-            if(subRelations && subRelations['relation'] != undefined){
-                //console.log(global[item.key][0],item.key,subRelations['relation'])
-                 //console.log('array',global[item.key][0])
-                //   await recursiveRelation({[item.key]:global[item.key][0]},subRelations)
-               // console.log('relations',subRelations)
-              await recursiveRelation({...global[item.key][0],'teste':1},subRelations)
+                //let anyRelation = await databaseUtil.openCustomDatabase(item.table)
+
+                await recursiveRelation({...global[item.key][0],subItem:item.key},subRelations)
             }
 
         }))
