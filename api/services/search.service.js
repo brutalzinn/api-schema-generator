@@ -52,6 +52,35 @@ const getDatabaseInfo = async (database,params) => {
     if(!Array.isArray(json)){
         return await json
     }
+    var global
+    const recursiveRelation = async (findedOriginal,relationsTable) =>{
+
+        await  Promise.all(relationsTable['relation'].map(async(item,index)=>{
+            // let subTable = await openFile(item.table)
+            // let subFinder = subTable.find((f)=>f.id === findedOriginal[item.key])
+            // global = {...findedOriginal,[item.key]:[subFinder]}
+            let subRelations = await databaseUtil.openCustomDatabase(item.table)
+
+            if(findedOriginal[item.key]){
+                let subTableT = await openFile(item.table)
+                let finderT = subTableT.find((f)=>f.id === findedOriginal[item.key])
+                global = {...findedOriginal,[item.key]:[finderT]}
+            }
+            console.log('global',item.key,item.table,findedOriginal)
+
+            if(subRelations['relation'] != undefined){
+                await recursiveRelation(global,subRelations)
+            }
+
+        }))
+    }
+    const makeAllRelationTest = async (database,id) =>{
+        let originalTable = await openFile(database)
+        let findedOriginal = originalTable.find((f)=>f.id === id)
+        let relationsTable = await databaseUtil.openCustomDatabase(database)
+        return await recursiveRelation(findedOriginal,relationsTable)
+
+    }
     await Promise.all(json.map(async (item,index)=>{
         await Promise.all(relations.map(async (relat)=>{
             if(searchParams.includes(relat.table)){
@@ -69,13 +98,14 @@ const getDatabaseInfo = async (database,params) => {
                         json[index] = {...json[index],[relat.key]:tmpRelationArray}
 
                     }else{
-                        let relationTable = await openFile(relat.table)
+                        // let relationTable = await openFile(relat.table)
 
-                        if(!relationTable){
-                            return
-                        }
-                        let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
-                        json[index] = {...json[index],[relat.key]:relationFinded}
+                        // if(!relationTable){
+                        //     return
+                        // }
+                        //let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
+                        await makeAllRelationTest(database,item.id)
+                        json[index] = {...global}
 
                     }
 
@@ -133,40 +163,40 @@ const searchFinder = async(database,req) => {
 
         })
     })
-if(relationsParams && relations){
-    await Promise.all(response.map(async (item,index)=>{
-        await Promise.all(relations.map(async (relat)=>{
-            if(relationsParams.includes(relat.table)){
-                if(item[relat.key]){
-                    if(Array.isArray(item[relat.key])){
-                        let relationTable = await openFile(relat.table)
-                        if(!relationTable){
-                            return
-                        }
-                        let tmpRelationArray = []
-                        item[relat.key].map((v)=>{
-                            let relationFinded = relationTable.find((f)=>f.id === v)
-                            tmpRelationArray.push(relationFinded)
-                        })
-                        response[index] = {...response[index],[relat.key]:tmpRelationArray}
+    if(relationsParams && relations){
+        await Promise.all(response.map(async (item,index)=>{
+            await Promise.all(relations.map(async (relat)=>{
+                if(relationsParams.includes(relat.table)){
+                    if(item[relat.key]){
+                        if(Array.isArray(item[relat.key])){
+                            let relationTable = await openFile(relat.table)
+                            if(!relationTable){
+                                return
+                            }
+                            let tmpRelationArray = []
+                            item[relat.key].map((v)=>{
+                                let relationFinded = relationTable.find((f)=>f.id === v)
+                                tmpRelationArray.push(relationFinded)
+                            })
+                            response[index] = {...response[index],[relat.key]:tmpRelationArray}
 
-                    }else{
-                        let relationTable = await openFile(relat.table)
+                        }else{
+                            let relationTable = await openFile(relat.table)
 
-                        if(!relationTable){
-                            return
+                            if(!relationTable){
+                                return
+                            }
+                            let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
+                            response[index] = {...response[index],[relat.key]:relationFinded}
+
                         }
-                        let relationFinded = relationTable.find((f)=>f.id === item[relat.key])
-                        response[index] = {...response[index],[relat.key]:relationFinded}
 
                     }
-
                 }
-            }
+            }))
         }))
-    }))
 
-}
+    }
 
     return response
     //return json.find((item)=>item.tags == regex)
