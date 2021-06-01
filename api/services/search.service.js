@@ -56,23 +56,24 @@ const getDatabaseInfo = async (database,params) => {
 
     const recursiveRelation = async (findedOriginal,relationsTable) =>{
         //console.log('received',findedOriginal,relationsTable)
-
-
+       // console.log('start',global)
+        //console.log('started',relationsTable)
         if(!relationsTable['relation']){
             return
         }
+        console.log('-----')
         await  Promise.all(relationsTable['relation'].map(async(item,index)=>{
-
-            // let subTable = await openFile(item.table)
-            // let subFinder = subTable.find((f)=>f.id === findedOriginal[item.key])
-            // global = {...findedOriginal,[item.key]:[subFinder]}
-            // console.log('globo',item,index)
-//            console.log(item)
+            let originalTable = await openFile(item.table)
+            let finderTable = originalTable.find((f)=>f.id === findedOriginal[item.key])
             let subRelations = await databaseUtil.openCustomDatabase(item.table)
-            //    console.log(item.key)
+          //  console.log(index,'teste',global)
+            if(global.subParent){
+                console.log('testeee',global)
+            }
 
-console.log(item.table,subRelations)
+                global = {...global,[item.key]:finderTable,subParent:item.table}
 
+            recursiveRelation(global,subRelations)
         }))
         return global
         //   console.log('global',global)
