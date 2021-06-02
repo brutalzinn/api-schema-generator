@@ -52,30 +52,54 @@ const getDatabaseInfo = async (database,params) => {
     if(!Array.isArray(json)){
         return await json
     }
-    var global = []
 
     const recursiveRelation = async (findedOriginal,relationsTable) =>{
         //console.log('received',findedOriginal,relationsTable)
-       // console.log('start',global)
+        // console.log('start',global)
         //console.log('started',relationsTable)
         if(!relationsTable['relation']){
             return
         }
-        console.log('-----')
+        //console.log('-----')
         await  Promise.all(relationsTable['relation'].map(async(item,index)=>{
-            let originalTable = await openFile(item.table)
-            let finderTable = originalTable.find((f)=>f.id === findedOriginal[item.key])
+
             let subRelations = await databaseUtil.openCustomDatabase(item.table)
-          //  console.log(index,'teste',global)
-            if(global.subParent){
-                console.log('testeee',global)
+            //  console.log(index,'teste',global)
+            //  console.log(subRelations)
+            if(subRelations['relation']){
+                //  console.log('sub relation for this,',item.table)
+                if(!subRelations['relation']){
+                    return
+                }
+                await Promise.all(subRelations['relation'].map(async (relat)=>{
+                    console.log('T',item.table,'-->',relat.table,relat.key)
+                    let originalT= await openFile(item.table)
+                    let finderT = originalT.find((f)=>f.id === findedOriginal[item.key])
+
+                    let originalRT= await openFile(relat.table)
+                    let finderRT
+                   if(finderT && finderT[relat.key]){
+                    console.log(finderT,finderT[relat.key])
+                    finderRT = originalRT.find((f)=>f.id === finderT[relat.key])
+                   }
+                    finderT = {...finderT,[relat.key]:finderRT}
+                    findedOriginal = {...findedOriginal,[item.key]:finderT}
+                    await recursiveRelation(findedOriginal,subRelations)
+
+
+                }))
+            }else{
+                let originalTable = await openFile(item.table)
+                let finderTable = originalTable.find((f)=>f.id === findedOriginal[item.key])
+                //  console.log('undefinde',finderTable)
+                findedOriginal = {...findedOriginal,[item.key]:finderTable}
+                //    console.log('executou 2')
+
+                // console.log('####não executado')
+
             }
-
-                global = {...global,[item.key]:finderTable,subParent:item.table}
-
-            recursiveRelation(global,subRelations)
         }))
-        return global
+        return findedOriginal
         //   console.log('global',global)
     }
     const makeAllRelationTest = async (database,id) =>{
