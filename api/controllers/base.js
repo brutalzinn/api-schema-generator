@@ -8,7 +8,6 @@ async function createPost(database){
     const { body } = req;
   const response = await create(database,body)
   let language = await getLanguage([database])
-  console.log(language)
   if(!response){
     return res.status(200).send({
        mensagem: language['ERROR_UNEXPECTED']

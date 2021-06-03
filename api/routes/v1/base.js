@@ -13,7 +13,7 @@ module.exports = async (router) => {
       .post(relationHandler(data.database),tagsHandler(data.database),
       await baseController.createPost(data.database)
       )
-      .put(tagsHandler(data.database),
+      .put(
       await baseController.editPost(data.database)
       )
       router.route(`/${data.database}/:id`)

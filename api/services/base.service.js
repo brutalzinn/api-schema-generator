@@ -9,7 +9,7 @@ return created
 const edit = async (database,body) => {
   const {id} = body
   const update = await Update(database,body)
-  console.log('update',update)
+  console.log('id')
   await relationSync(database,{...body,id})
   return update
 

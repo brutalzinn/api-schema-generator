@@ -82,6 +82,7 @@ const saveFile = async (arquivo,model) =>{
 
 
 const relationCreator = async (body,database,relationDatabase,key) =>{
+    console.log('###########',body,database,relationDatabase,key)
     const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
     let toUpdate = []
     await Promise.all(relationDatabaseJson.map(async (data)=>{
@@ -95,7 +96,11 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
                 }
             }))
         }else{
-            await tagUtils.tagsSync(database,relationDatabase,key,id)
+            if(data[key] == body.id){
+              let tags =  await tagUtils.tagsSync(database,relationDatabase,key,id)
+              data['tags'] = tags
+              toUpdate.push(data)
+            }
         }
     }))
 

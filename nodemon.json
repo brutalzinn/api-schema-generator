@@ -1,0 +1,3 @@
+{
+    "ignore": ["api/config/*.json","api/database/*.json", "README"]
+}

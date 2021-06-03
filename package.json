@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
+    "restart": "nodemon index.js",
     "drop-categoria": "node file-cli.js drop categoria",
     "drop-post": "node file-cli.js drop post",
     "about": "node file-cli.js about",

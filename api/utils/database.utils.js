@@ -46,6 +46,7 @@ const Delete = async (arquivo,id) =>{
 }
 const updateOverwrite = async (arquivo,data) =>{
     let json = await openFile(arquivo)
+    console.log('model',data)
     data.map((item)=>{
         let editTeste = json.findIndex((v)=>v.id == item.id)
         if(editTeste == -1){
