@@ -25,6 +25,8 @@
     "DATABASE_ABOUT_SHOW_DESCRIPTION":"Description",
     "DATABASE_ABOUT_SHOW_SINTAX":"Sintax",
     "LANGUAGE_CHANGED":"Changing language to %0",
+    "PORT_CHANGED":"Changing port to %0",
+
 
 
     "command":{
@@ -44,6 +46,10 @@
             "description":"Sets the language",
             "usage":"language <filename>"
         },
+        "port":{
+            "description":"Sets the port",
+            "usage":"port <integer>"
+        },
         "remove":{
             "description":"Remove a relation or a tag of a especify collection.",
             "usage":"remove <collection> <tag or relation>"
@@ -60,6 +66,7 @@
             "description":{"config":"Create a config to a collection with especify key.","remove":"Remove a config of a collection with especify key."},
             "usage":{"config":"config <database> <option> <key> <value>","remove":"config <database> remove <key>"}
         },
+
         "about":{
             "description":"Show info about a command.",
             "usage":"about <command>"

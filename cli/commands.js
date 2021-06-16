@@ -3,6 +3,7 @@ const handler = require('./handler')
 
 const {config} = require('./commands/config')
 const {language} = require('./commands/language')
+const {port} = require('./commands/port')
 
 const checkCommand = (command,args) =>{
     command = command.toLocaleLowerCase()
@@ -38,5 +39,6 @@ const verifyCommand = (command) => {
 module.exports = {
     verifyCommand,
     config,
-    language
+    language,
+    port
 }

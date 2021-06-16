@@ -20,6 +20,11 @@ module.exports ={
         description:"Sets the language",
         usage:"language <filename>"
     },
+    port:{
+        name:"port",
+        description:"Sets the port",
+        usage:"port <integer>"
+    },
     remove:{
         name:"remove",
         description:"Remove a relation or a tag of a especify collection.",

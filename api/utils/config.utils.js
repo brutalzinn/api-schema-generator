@@ -28,7 +28,7 @@ const loadConfig = async () =>{
     Config = config
 }
 const getConfig = async () =>{
-   return  Config
+    return  Config
 }
 const openCustomDatabase = async (database) =>{
     if(Object.keys(Config).length == 0){
@@ -40,6 +40,23 @@ const openCustomDatabase = async (database) =>{
 }
 const createModel = (model) =>{
     return {id:uuid(),...model}
+}
+const setDefaultConfig = async () =>{
+    const databaseConfigUtils = require('../../api/utils/config.utils')
+    let configDatabase = await databaseConfigUtils.openFile('config')
+    let configIndex = configDatabase.findIndex((v)=>v.config)
+    if(configIndex == -1){
+        configDatabase.push({config:{language:'en',port:'3000'}})
+        await databaseConfigUtils.saveFile('config',configDatabase)
+
+    }
+    if(Object.keys(configDatabase).find(key => configDatabase[key] === 'port')){
+        console.log('tem porta')
+    }else{
+        console.log('não tem porta')
+    }
+    console.log(Object.keys(configDatabase).find(key => configDatabase['port'] ))
+    //
 }
 const Update = async (arquivo,model) =>{
     let json = await openFile(arquivo)
@@ -97,9 +114,9 @@ const relationCreator = async (body,database,relationDatabase,key) =>{
             }))
         }else{
             if(data[key] == body.id){
-              let tags =  await tagUtils.tagsSync(database,relationDatabase,key,id)
-              data['tags'] = tags
-              toUpdate.push(data)
+                let tags =  await tagUtils.tagsSync(database,relationDatabase,key,id)
+                data['tags'] = tags
+                toUpdate.push(data)
             }
         }
     }))
@@ -115,6 +132,7 @@ module.exports = {
     openFile,
     saveFile,
     Delete,
+    setDefaultConfig,
     relationCreator,
     loadConfig,
     getConfig,

@@ -23,16 +23,6 @@ const saveFile = async (arquivo,model) =>{
         return false
     }
 }
-const setDefaultLanguage = async () =>{
-    const databaseConfigUtils = require('../../api/utils/config.utils')
-    let configDatabase = await databaseConfigUtils.openFile('config')
-    let configIndex = configDatabase.findIndex((v)=>v.config)
-    if(configIndex == -1){
-        configDatabase.push({config:{language:'en'}})
-        await databaseConfigUtils.saveFile('config',configDatabase)
-    }
-    //
-}
 const loadLanguage = async () =>{
     const databaseConfigUtils = require('../../api/utils/config.utils')
     let configDatabase = await databaseConfigUtils.openFile('config')
@@ -63,7 +53,6 @@ module.exports = {
     openFile,
     saveFile,
     loadLanguage,
-    getLanguage,
-    setDefaultLanguage
+    getLanguage
 
 }

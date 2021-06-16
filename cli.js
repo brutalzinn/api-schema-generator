@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
-const {verifyCommand,config,language} = require('./cli/commands')
+const {verifyCommand,config,language,port} = require('./cli/commands')
 const LangueUtils = require('./cli/utils/language.utils')
 
 const {saveFile,openFile} = require('./api/utils//config.utils')
@@ -80,6 +80,9 @@ const executor = async(myArgs) =>{
     break
     case 'language':
     await language(myArgs)
+    break
+    case 'port':
+    await port(myArgs)
     break
     case 'remove':
     let removeDatabaseOption = async (database) =>{

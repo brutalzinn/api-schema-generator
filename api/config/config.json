@@ -1,1 +1,1 @@
-[{"config":{"language":"en"}},{"database":"post","relation":[{"table":"teste","key":"teste"}],"config":{"tag":[{"generateall":true}]},"tag":["titulo"]},{"database":"teste","tag":["descricao"]}]
+[{"config":{"language":"en","port":"3000"}}]
