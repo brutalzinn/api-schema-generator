@@ -10,9 +10,7 @@ const tagEnabled =  Boolean(parseInt(process.env.TAGS))
 require('./api/server');
 
 console.log(
-  `<<< ${name} v${version}. Uma api para simular conexão com banco de dados e facilitar o desenvolvimento da camada de interface. Rodando na porta ${process.env.PORT} >>>`
-);
-console.log(  `<<< Sistema de tags: ${tagEnabled} >>>`
+  `<<< ${name} v${version}. Uma api para simular conexão com banco de dados e facilitar o desenvolvimento da camada de interface >>>`
 )
 var messagem = 'Olá!!! bem-vindo à selva, bootcampers da noite. \n Essa é uma pequena api que armazena dados em um documento json. \n Parecido com o MongoDB!'+
 '\n Sinta-se livre para alterar, fazer pedidos de merge e construir seu projeto super maneiro com essa api'+
