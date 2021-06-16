@@ -30,6 +30,17 @@ const loadConfig = async () =>{
 const getConfig = async () =>{
     return  Config
 }
+const getPort = async () =>{
+
+    let configDatabase = await openFile('config')
+    let portConfig
+    configDatabase.map((item)=>{
+        if(item.config && item.config.port){
+            portConfig = item.config.port
+        }
+    })
+    return portConfig
+}
 const openCustomDatabase = async (database) =>{
     if(Object.keys(Config).length == 0){
         console.log('não foi possivel abrir. Erro critico no banco',arquivo)
@@ -42,97 +53,96 @@ const createModel = (model) =>{
     return {id:uuid(),...model}
 }
 const setDefaultConfig = async () =>{
-    const databaseConfigUtils = require('../../api/utils/config.utils')
-    let configDatabase = await databaseConfigUtils.openFile('config')
+
+    let configDatabase = await openFile('config')
     let configIndex = configDatabase.findIndex((v)=>v.config)
     if(configIndex == -1){
         configDatabase.push({config:{language:'en',port:'3000'}})
-        await databaseConfigUtils.saveFile('config',configDatabase)
-     }
-
-        //
+        await saveFile('config',configDatabase)
     }
-    const Update = async (arquivo,model) =>{
-        let json = await openFile(arquivo)
-        let copyJson = [...json]
-        var editTeste = copyJson.findIndex((item)=>item.id == model.id)
-        delete model['id']
-        json[editTeste] = {...json[editTeste],...model}
-        await saveFile(arquivo,json)
+}
+const Update = async (arquivo,model) =>{
+    let json = await openFile(arquivo)
+    let copyJson = [...json]
+    var editTeste = copyJson.findIndex((item)=>item.id == model.id)
+    delete model['id']
+    json[editTeste] = {...json[editTeste],...model}
+    await saveFile(arquivo,json)
+}
+const updateOverwrite = async (arquivo,model) =>{
+    let json = await openFile(arquivo)
+    let copyJson = [...json]
+    var editTeste = copyJson.findIndex((item)=>item.id == model.id)
+    // delete model['id']
+    json[editTeste] = {...model}
+    await saveFile(arquivo,json)
+}
+const Insert = async (arquivo,model) =>{
+    let json = await openFile(arquivo)
+    json.push(model)
+    saveFile(arquivo,json)
+}
+const Delete = async (arquivo,id) =>{
+    let json = await openFile(arquivo)
+    let copyJson = [...json]
+    var editTeste = copyJson.findIndex((item)=>item.id == id)
+    json.splice(editTeste,1)
+    await saveFile(arquivo,json)
+}
+const saveFile = async (arquivo,model) =>{
+    try{
+        fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
+            if (err) throw err;
+        });
+        return true
+    }catch(exception){
+        return false
     }
-    const updateOverwrite = async (arquivo,model) =>{
-        let json = await openFile(arquivo)
-        let copyJson = [...json]
-        var editTeste = copyJson.findIndex((item)=>item.id == model.id)
-        // delete model['id']
-        json[editTeste] = {...model}
-        await saveFile(arquivo,json)
-    }
-    const Insert = async (arquivo,model) =>{
-        let json = await openFile(arquivo)
-        json.push(model)
-        saveFile(arquivo,json)
-    }
-    const Delete = async (arquivo,id) =>{
-        let json = await openFile(arquivo)
-        let copyJson = [...json]
-        var editTeste = copyJson.findIndex((item)=>item.id == id)
-        json.splice(editTeste,1)
-        await saveFile(arquivo,json)
-    }
-    const saveFile = async (arquivo,model) =>{
-        try{
-            fs.writeFileSync(path.join(root_dir,arquivo+'.json'),JSON.stringify(model),err => {
-                if (err) throw err;
-            });
-            return true
-        }catch(exception){
-            return false
-        }
-    }
+}
 
 
-    const relationCreator = async (body,database,relationDatabase,key) =>{
-        console.log('###########',body,database,relationDatabase,key)
-        const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
-        let toUpdate = []
-        await Promise.all(relationDatabaseJson.map(async (data)=>{
-            let id = data.id
-            if(Array.isArray(data[key])){
-                await Promise.all(data[key].map(async (f)=>{
-                    if(f == body.id){
-                        let tags = await tagUtils.tagsSync(database,relationDatabase,key,id)
-                        data['tags'] = tags
-                        toUpdate.push(data)
-                    }
-                }))
-            }else{
-                if(data[key] == body.id){
-                    let tags =  await tagUtils.tagsSync(database,relationDatabase,key,id)
+const relationCreator = async (body,database,relationDatabase,key) =>{
+    console.log('###########',body,database,relationDatabase,key)
+    const relationDatabaseJson = await databaseHandler.openFile(relationDatabase)
+    let toUpdate = []
+    await Promise.all(relationDatabaseJson.map(async (data)=>{
+        let id = data.id
+        if(Array.isArray(data[key])){
+            await Promise.all(data[key].map(async (f)=>{
+                if(f == body.id){
+                    let tags = await tagUtils.tagsSync(database,relationDatabase,key,id)
                     data['tags'] = tags
                     toUpdate.push(data)
                 }
+            }))
+        }else{
+            if(data[key] == body.id){
+                let tags =  await tagUtils.tagsSync(database,relationDatabase,key,id)
+                data['tags'] = tags
+                toUpdate.push(data)
             }
-        }))
+        }
+    }))
 
-        await databaseHandler.updateOverwrite(relationDatabase,toUpdate)
-    }
+    await databaseHandler.updateOverwrite(relationDatabase,toUpdate)
+}
 
-    const createDatabase = async () =>{
+const createDatabase = async () =>{
 
 
-    }
-    module.exports = {
-        openFile,
-        saveFile,
-        Delete,
-        setDefaultConfig,
-        relationCreator,
-        loadConfig,
-        getConfig,
-        Insert,
-        updateOverwrite,
-        openCustomDatabase,
-        Update,
-        createModel
-    }
+}
+module.exports = {
+    openFile,
+    saveFile,
+    Delete,
+    setDefaultConfig,
+    relationCreator,
+    loadConfig,
+    getPort,
+    getConfig,
+    Insert,
+    updateOverwrite,
+    openCustomDatabase,
+    Update,
+    createModel
+}
