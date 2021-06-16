@@ -13,7 +13,7 @@ const port = async (myArgs) =>{
         databases.push({config:{port:myArgs[1]}})
     }
     databases.map((item)=>{
-        if(item.config && item.config.port){
+        if(item.config){
             item.config.port = myArgs[1]
         }
     })
