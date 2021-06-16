@@ -17,6 +17,8 @@ and the api will auto create yours routes. Easy use!
 | language| language \<filename\>|Sets the language|
 | remove| remove \<collection\> \<tag or relation\>|Remove a relation or a tag of a especify collection.|
 | clear| clear \<collection\>|Clear a collection|
+| port| port \<integer\>|Sets the port|
+
 
 When you create a collection, the api enables the syntax for these routes:
 
@@ -30,6 +32,20 @@ When you create a collection, the api enables the syntax for these routes:
 | v1/{collection} | post | create a collection data|
 | v1/{collection}/extra | get | advanced relational get data. To this route works, you needs provides the relational table names in query param. You can pass a specific id to search for a specific data its collection.|
 | v1/{collection}/search | get | advanced relational get data based on search tags. For this route to work, you can  provide the relational table names in the relations param. You need to pass the tags that you want to find in query param. All these params needs be inserted in the url|
+
+How startup:
+
+   1. npm install
+   2. npm run cli language en (Config the language)
+   3. npm run cli port <integer>(optional, but you can sets a port by command, default port is 3001)
+   4. npm run cli about (See all commands avaible)
+   5. npm run cli create <collectioname> (create your first collection)
+   6. Check the routes information in this repository to see the routes avaible.
+   7. Enjoy the schema api!
+  
+ 
+  [Access demo video](https://www.youtube.com/watch?v=pcUcxJkH4FE&t=117s)
+
 
 
 
