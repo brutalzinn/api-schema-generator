@@ -9,12 +9,8 @@ app.use(cors());
 
 const router = require('./routes/index');
 router(app);
-
-// const port = process.env.PORT
-// console.log('started at ',getPort())
 getPort().then((port)=>{
 app.listen(port, async () => {
-    //console.log('Default language to ', setDefaultConfig())
     await loadConfig()
     await setDefaultConfig()
     await loadLanguage()
