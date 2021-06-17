@@ -7,6 +7,9 @@ const tagUtils = require('./tags.utils')
 var Config = {}
 
 const openFile = async (arquivo) =>{
+    if (!fs.existsSync(root_dir)) {
+        fs.mkdirSync(root_dir)
+    }
     let filePath = path.join(root_dir,arquivo+'.json')
     if (fs.existsSync(filePath)) {
 
