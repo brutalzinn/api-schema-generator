@@ -37,7 +37,7 @@ How startup:
 
    1. npm install
    2. npm run cli language en(english) or pt(for portuguese) - Config the language
-   3. npm run cli port <integer>(optional, but you can sets a port by command, default port is 3001)
+   3. npm run cli port <integer>(optional, but you can sets a port by command, default port is 3000)
    4. npm run cli about (See all commands avaible)
    5. npm run cli create <collectioname> (create your first collection)
    6. Check the routes information in this repository to see the routes avaible.
