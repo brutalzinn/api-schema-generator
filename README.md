@@ -36,7 +36,7 @@ When you create a collection, the api enables the syntax for these routes:
 How startup:
 
    1. npm install
-   2. npm run cli language en (Config the language)
+   2. npm run cli language en(english) or pt(for portuguese) - Config the language
    3. npm run cli port <integer>(optional, but you can sets a port by command, default port is 3001)
    4. npm run cli about (See all commands avaible)
    5. npm run cli create <collectioname> (create your first collection)
