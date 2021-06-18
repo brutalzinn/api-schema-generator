@@ -1,3 +1,3 @@
 {
-    "ignore": ["api/config/*.json","api/database/*.json", "README"]
+    "ignore": ["api/database/*.json", "README"]
 }

@@ -3,7 +3,7 @@ const path = require('path');
 const databaseSave = require('./api/utils/database.utils')
 const {verifyCommand,config,language,port} = require('./cli/commands')
 const LangueUtils = require('./cli/utils/language.utils')
-
+const {spawn} = require('child_process');
 const {saveFile,openFile} = require('./api/utils//config.utils')
 
 const root_dir  = path.join(path.dirname(require.main.filename),'api')
@@ -75,6 +75,7 @@ const executor = async(myArgs) =>{
       await saveFile('config',databases)
       await databaseSave.openFile(database)
       console.log(languageLang['DATABASE_CREATE'])
+      //  restartProcess()
     }
     createDatabase(myArgs[1])
     break
@@ -267,3 +268,4 @@ const executor = async(myArgs) =>{
   }}
 
   executor(myArgs)
+  //restartProcess()
