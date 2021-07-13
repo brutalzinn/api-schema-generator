@@ -15,6 +15,28 @@ const recursiveRelation  = async (database, items = []) =>{
         return items
     }
 }
+const getRecursiveRelation = async (database, subRelation = [], items = []) =>{
+    let child = subRelation.find((item)=> item.table === database)
+    if(child != undefined && child['child']){
+        items.unshift(child['child_key'])
+        await getRecursiveRelation(child['child'], subRelation, items)
+        return items
+    }
+}
+// Thanks to abanet user from stackoverflow <3 https://stackoverflow.com/questions/4244896/dynamically-access-object-property-using-variable
+function resolve(path, obj) {
+    return path.split('.').reduce(function(prev, curr) {
+        return prev ? prev[curr] : null
+    }, obj || self)
+}
+const transformToResolve = (array) =>{
+    let result = ""
+    array.map((item)=> {
+        result += `${item}.`
+    })
+    return result.slice(0,-1)
+}
+
 const getDatabaseInfo = async (database,params) => {
     var searchParams = params.query.query.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().split(' ');
     let id = params.query.id
@@ -69,6 +91,7 @@ const getDatabaseInfo = async (database,params) => {
     // allRelationsTable = []
     let subItemRelation = await recursiveRelation(database)
 
+    console.log(subItemRelation)
     await Promise.all(json.map(async (item,index)=>{
         await Promise.all(subItemRelation.map(async (subRelation) =>{
             if(searchParams.includes(subRelation.table)){
@@ -97,10 +120,13 @@ const getDatabaseInfo = async (database,params) => {
                         let relationFinded = relationTable.find((f)=>f.id === item[subRelation.key])
                         json[index] = {...json[index],[subRelation.key]:relationFinded}
                     }else{
-                        // console.log(json[index])
-                        let relationFinded = relationTable.find((f)=>f.id === json[index][subRelation.child_key][subRelation.key])
-                        json[index][subRelation.child_key] = {...json[index][subRelation.child],[subRelation.key]:relationFinded}
-                        //console.log( json[index])
+                        let subRelationFather = await getRecursiveRelation(subRelation.table, subItemRelation)
+                        let resolveString = transformToResolve(subRelationFather) + `.${subRelation.key}`
+                        //  console.log('#####',resolveString)
+
+                            let relationFinded = relationTable.find((f)=>f.id === resolve(resolveString,json[index]))//json[index][subRelation.child_key][subRelation.key])
+                            console.log(subRelation.child_key)
+                            json[index][subRelation.child_key] = {...json[index][subRelation.child],[subRelation.key]:relationFinded}
 
                     }
 
