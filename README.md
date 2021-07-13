@@ -22,6 +22,7 @@ and the api will auto create yours routes. Easy use!
 
 When you create a collection, the api enables the syntax for these routes:
 
+# Basic routes v1
 
 | Route|verb|Action |
 | - |:-:| -:|
@@ -33,6 +34,12 @@ When you create a collection, the api enables the syntax for these routes:
 | v1/{collection}/extra | get | advanced relational get data. To this route works, you needs provides the relational table names in query param. You can pass a specific id to search for a specific data its collection.|
 | v1/{collection}/search | get | advanced relational get data based on search tags. For this route to work, you can  provide the relational table names in the relations param. You need to pass the tags that you want to find in query param. All these params needs be inserted in the url|
 
+# Extra routes v2
+
+| Route|verb|Action |
+| - |:-:| -:|
+| /v2/{collection}| get | get all collection data |
+
 How startup:
 
    1. npm install
@@ -42,8 +49,8 @@ How startup:
    5. npm run cli create <collectioname> (create your first collection)
    6. Check the routes information in this repository to see the routes avaible.
    7. Enjoy the schema api!
-  
- 
+
+
   [Access demo video](https://www.youtube.com/watch?v=pcUcxJkH4FE&t=117s)
 
 
