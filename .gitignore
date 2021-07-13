@@ -6,4 +6,3 @@ Dockerfile
 package-lock.json
 api/database/
 api/config/
-api/config/config.json
