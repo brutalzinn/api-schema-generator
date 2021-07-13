@@ -1,1 +1,1 @@
-[{"config":{"language":"en","port":"5555"}},{"database":"post"}]
+[{"config":{"language":"en","port":"5555"}},{"database":"post","relation":[{"table":"teste","key":"teste"}]},{"database":"teste","relation":[{"table":"banana","key":"bananakey"}]},{"database":"banana","relation":[{"table":"pepino","key":"pepinokey"}]},{"database":"abacate"},{"database":"pepino","relation":[{"table":"rick","key":"rickkey"}]},{"database":"rick"}]
