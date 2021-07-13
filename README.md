@@ -38,7 +38,7 @@ When you create a collection, the api enables the syntax for these routes:
 
 | Route|verb|Action |
 | - |:-:| -:|
-| /v2/{collection}| get | get all collection data |
+| /v2/{collection}/{collection_key}/{value}| get | get all collection data that have collection_key attribute with the especified value|
 
 How startup:
 
@@ -52,7 +52,3 @@ How startup:
 
 
   [Access demo video](https://www.youtube.com/watch?v=pcUcxJkH4FE&t=117s)
-
-
-
-
