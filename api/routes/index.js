@@ -4,6 +4,7 @@ const { name, version } = require('../../package.json');
 
 const routesBase = require('./v1/base');
 const routesV1Search = require('./v1/extra/search');
+const routesV1BaseExtra = require('./v1/extra/base_extra');
 
 
 
@@ -16,11 +17,13 @@ module.exports = async (app) => {
 
   const routesV1 = Router();
 
-  routesV1Search(routesV1);
+  await routesV1Search(routesV1);
  await routesBase(routesV1);
+ app.use('/v1', routesV1);
+ const routesV2 = Router();
 
-
-  app.use('/v1', routesV1);
+ await routesV1BaseExtra(routesV2)
+  app.use('/v2', routesV2);
 
 
 

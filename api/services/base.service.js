@@ -18,6 +18,16 @@ const get = async (database,id) => {
   const json = await openFile(database)
   return json.find((item)=>item.id == id) || false
 }
+const keypairservice = async (database,req) => {
+  const json = await openFile(database)
+  const { key, value } = req.params
+  const result = json.filter(function (obj){
+    if(obj[key] == value){
+      return true
+    }
+  })
+  return result || false
+}
 const getCustom = async (column,value) => {
   const json = await openFile(database)
   return json.find((item)=>item[column] == value)
@@ -38,6 +48,7 @@ const list = async (database) => {
 
 module.exports = {
   create,
+  keypairservice,
   list,
   del,
   get,

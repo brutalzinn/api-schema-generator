@@ -10,19 +10,19 @@ module.exports = async (router) => {
     .get(
       await baseController.lista(data.database)
       )
-      .post(relationHandler(data.database),tagsHandler(data.database),
-      await baseController.createPost(data.database)
-      )
-      .put(
-      await baseController.editPost(data.database)
-      )
-      router.route(`/${data.database}/:id`)
-      .delete(
-        await baseController.delPost(data.database)
+        .post(relationHandler(data.database),tagsHandler(data.database),
+        await baseController.createPost(data.database)
         )
-        router.route(`/${data.database}/:id`)
-        .get(
-          await baseController.getPost(data.database)
+        .put(
+          await baseController.editPost(data.database)
           )
-        }))
-      }
+          router.route(`/${data.database}/:id`)
+          .delete(
+            await baseController.delPost(data.database)
+            )
+            router.route(`/${data.database}/:id`)
+            .get(
+              await baseController.getPost(data.database)
+              )
+            }))
+          }

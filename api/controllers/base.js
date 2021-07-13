@@ -1,5 +1,5 @@
 
-const {create,list,del,edit,get,getCustom} = require('../services/base.service');
+const {create,list,del,edit,get,getCustom,keypairservice} = require('../services/base.service');
 const {getLanguage} = require('../../cli/utils/language.utils')
 
 async function createPost(database){
@@ -17,6 +17,21 @@ async function createPost(database){
       mensagem: language['SUCESS_POST']
     });
   }
+}
+async function keypairtest(database){
+
+  return async (req,res,next) => {
+    const response = await keypairservice(database,req)
+    const { key } = req.params
+    let language = await getLanguage([key,database])
+    if(!response){
+     return res.status(200).send({
+        mensagem: language['NOT_FOUND']
+      });
+    }
+    return res.status(200).json(response)
+  }
+
 }
 
 async function delPost(database){
@@ -91,6 +106,7 @@ async function editPost(database){
 module.exports = {
   createPost,
   delPost,
+  keypairtest,
   getPost,
   lista,
   editPost
